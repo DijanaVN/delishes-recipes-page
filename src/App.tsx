@@ -1,32 +1,29 @@
 import "./App.css";
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, useColorMode } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 
 function App() {
+  // const { colorMode, toggleColorMode } = useColorMode();
   return (
-    <Grid templateAreas={`'nav nav' 'aside main '`}>
-      <GridItem
-        padding={1.5}
-        area={"nav"}
-        bgGradient="linear(to-t,rgba(213,231,184,1), rgba(34,146,195,1) )"
-      >
+    <Grid templateAreas={`'nav nav' 'aside main ' 'footer footer'`}>
+      <GridItem padding={1} area={"nav"} bg="bluecolor">
         <NavBar />
       </GridItem>
 
-      <GridItem
-        minHeight="100vh"
-        area={"aside"}
-        bgGradient="linear(to-b,rgba(213,231,184,1), rgba(34,146,195,1) )"
-      >
+      <GridItem minHeight="80vh" area={"aside"} bg={"secondary"}>
         aside
       </GridItem>
-      <Grid
-        bgGradient="linear(to-b,rgba(213,231,184,1) , rgba(34,146,195,1) )"
-        gridArea={"main"}
+
+      <GridItem
+        bgGradient="linear(to-b,rgba(213,231,184,1), rgba(34,146,195,1) )"
+        area={"main"}
       >
-        <GridItem>main</GridItem>
-        <GridItem>footer</GridItem>
-      </Grid>
+        main
+      </GridItem>
+
+      <GridItem minHeight="20vh" bg="bluecolor" area={"footer"}>
+        footer
+      </GridItem>
     </Grid>
   );
 }
