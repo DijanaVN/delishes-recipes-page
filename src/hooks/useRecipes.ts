@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient, { query, app_id, app_key } from "../services/api-client";
-interface Recipe {
+export interface Recipe {
   recipe: {
     uri: string;
     label: string;
