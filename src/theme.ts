@@ -10,7 +10,7 @@ export const myNewTheme = extendTheme({
 
 const theme = extendTheme({
   config: {
-    initialColorMode: "#62B0BF",
+    initialColorMode: "light",
     // Add other theme configurations if needed
   },
 });

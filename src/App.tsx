@@ -1,6 +1,7 @@
 import "./App.css";
 import { Grid, GridItem, useColorMode } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
+import RecipeGrid from "./components/RecipeGrid";
 
 function App() {
   // const { colorMode, toggleColorMode } = useColorMode();
@@ -10,16 +11,11 @@ function App() {
         <NavBar />
       </GridItem>
 
-      <GridItem minHeight="80vh" area={"aside"} bg={"secondary"}>
-        aside
+      <GridItem minHeight="80vh" area={"aside"} paddingLeft={8} paddingTop={5}>
+        <RecipeGrid />
       </GridItem>
 
-      <GridItem
-        bgGradient="linear(to-b,rgba(213,231,184,1), rgba(34,146,195,1) )"
-        area={"main"}
-      >
-        main
-      </GridItem>
+      <GridItem area={"main"}>main</GridItem>
 
       <GridItem minHeight="20vh" bg="bluecolor" area={"footer"}>
         footer
