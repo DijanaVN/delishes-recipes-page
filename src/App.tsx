@@ -4,8 +4,11 @@ import NavBar from "./components/NavBar";
 
 import RecipeCard from "./components/RecipeCard";
 import RecipesList from "./components/RecipeList";
+import { useState } from "react";
+import { Recipe } from "./hooks/useRecipes";
 
 function App() {
+  const [selectetRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   // const { colorMode, toggleColorMode } = useColorMode();
   return (
     <Grid
@@ -17,16 +20,12 @@ function App() {
         <NavBar />
       </GridItem>
 
-      <GridItem minHeight="80vh" area={"aside"} paddingLeft={8} paddingTop={5}>
-        <RecipesList />
+      <GridItem minHeight="80vh" area={"aside"}>
+        <RecipesList onSelectRecipe={(recipe) => setSelectedRecipe(recipe)} />
       </GridItem>
 
       <GridItem area={"main"} gridColumn="2 / 3">
-        <RecipeCard />
-      </GridItem>
-
-      <GridItem minHeight="20vh" bg="bluecolor" area={"footer"}>
-        footer
+        <RecipeCard selectedRecipe={selectetRecipe} />
       </GridItem>
     </Grid>
   );

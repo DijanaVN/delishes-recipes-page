@@ -1,19 +1,23 @@
 import { useEffect, useState } from "react";
 import apiClient, { query, app_id, app_key } from "../services/api-client";
+
+interface Ingredients {
+  text: string;
+  quantity: number;
+  measure: string;
+  food: string;
+  weight: number;
+  foodId: string;
+}
+
 export interface Recipe {
   recipe: {
     uri: string;
     label: string;
     image: string;
-
-    ingredients: {
-      text: string;
-      quantity: number;
-      measure: string;
-      food: string;
-      weight: number;
-      foodId: string;
-    }[];
+    source: string;
+    url: string;
+    ingredients: Ingredients[];
     calories: number;
     cuisineType: string[];
     mealType: string[];
