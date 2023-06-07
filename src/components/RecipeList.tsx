@@ -1,20 +1,9 @@
-import {
-  Avatar,
-  Image,
-  Box,
-  Text,
-  Flex,
-  useColorMode,
-  useStyleConfig,
-} from "@chakra-ui/react";
+import { Avatar, Image, Box, Text, Flex, useColorMode } from "@chakra-ui/react";
 import useRecipes, { Recipe } from "../hooks/useRecipes";
 
 const RecipesList = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { recipes, error } = useRecipes();
-  const hoverColorStyle = useStyleConfig("RecipesList", {
-    variant: "priary",
-  });
 
   return (
     <>
@@ -25,7 +14,7 @@ const RecipesList = () => {
       <ul>
         {recipes.map((recipe) => (
           <ul key={recipe.recipe.uri}>
-            <Flex paddingBottom={2} sx={hoverColorStyle}>
+            <Flex paddingBottom={2}>
               <Image
                 boxSize="8%"
                 borderRadius="full"
