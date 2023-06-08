@@ -9,25 +9,42 @@ import {
   Button,
   Flex,
   Image,
+  useColorMode,
 } from "@chakra-ui/react";
-import { Recipe } from "../hooks/useRecipes";
+import useRecipes, { Recipe } from "../hooks/useRecipes";
 import recipe from "../../images-logos/image-recipe.webp";
+import noimage from "../../images-logos/no-thumbnail-image-placeholder.webp";
 
 interface Props {
   selectedRecipe: Recipe | null;
 }
 
 const RecipeCard = ({ selectedRecipe }: Props) => {
+  const { colorMode, toggleColorMode } = useColorMode();
+  const { error } = useRecipes();
+  const image = () => {
+    if (selectedRecipe?.recipe.images?.LARGE?.url) {
+      return selectedRecipe.recipe.images.LARGE.url;
+    } else if (selectedRecipe?.recipe.image) {
+      return selectedRecipe.recipe.image;
+    } else {
+      return "noimage";
+    }
+  };
   return (
     <>
-      <Card>
+      {" "}
+      {error && (
+        <Text color={colorMode === "dark" ? "#2292c3" : "black"}>{error} </Text>
+      )}
+      <Card width={"70vw"} height={"100vh"}>
         <CardBody>
           <Flex justifyContent="center" alignItems="center">
             <Image
               objectFit={"cover"}
               height={"50vh"}
               width={"100%"}
-              src={selectedRecipe?.recipe.image}
+              src={selectedRecipe ? image() : recipe}
               alt={selectedRecipe?.recipe.label}
               borderRadius="lg"
             />
@@ -35,11 +52,9 @@ const RecipeCard = ({ selectedRecipe }: Props) => {
 
           <Stack mt="6" spacing="3">
             <Heading textAlign="center" size="md">
-              {selectedRecipe ? (
-                selectedRecipe.recipe.label
-              ) : (
-                <Image src={recipe} borderRadius="lg" />
-              )}
+              {selectedRecipe
+                ? selectedRecipe.recipe.label
+                : "Please select a recipe."}
             </Heading>
             <Text paddingLeft={10} textAlign="start">
               {selectedRecipe?.recipe.ingredients.map((m) => (
@@ -49,13 +64,9 @@ const RecipeCard = ({ selectedRecipe }: Props) => {
           </Stack>
         </CardBody>
         <Divider />
-        <CardFooter>
-          <Flex
-            justifyItems={"center"}
-            flexDirection={"column"}
-            align={"center"}
-          >
-            <Text justifyContent="center" textAlign="center">
+        <CardFooter justifyContent="center" textAlign="center">
+          <Flex flexDirection={"column"} align={"center"}>
+            <Text>
               This recipe was carefully designed and tested by{" "}
               {selectedRecipe
                 ? selectedRecipe.recipe.source
@@ -63,8 +74,6 @@ const RecipeCard = ({ selectedRecipe }: Props) => {
               . Please check out directions at their website.
             </Text>
             <Button
-              justifyContent="center"
-              textAlign="center"
               onClick={() =>
                 selectedRecipe?.recipe.url
                   ? window.open(selectedRecipe.recipe.url)
@@ -77,7 +86,7 @@ const RecipeCard = ({ selectedRecipe }: Props) => {
               colorScheme="blue"
               fontSize={{ base: "xs", md: "md", lg: "lg" }}
             >
-              Direction ---{">"}
+              Direction ▶
             </Button>
           </Flex>
         </CardFooter>

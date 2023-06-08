@@ -11,15 +11,15 @@ const RecipesList = ({ onSelectRecipe }: Props) => {
 
   return (
     <Box>
-      {" "}
       {error && (
         <Text color={colorMode === "dark" ? "#2292c3" : "black"}>{error} </Text>
       )}
       <ul>
         {recipes.map((recipe) => (
-          <ul key={recipe.recipe.uri}>
-            <Flex>
+          <li key={recipe.recipe.url}>
+            <Flex padding={1}>
               <Button
+                padding={8}
                 onClick={() => onSelectRecipe(recipe)}
                 variant={"solid"}
                 display="flex"
@@ -31,7 +31,7 @@ const RecipesList = ({ onSelectRecipe }: Props) => {
                 borderRadius="none"
               >
                 <Box
-                  width="8"
+                  width="14"
                   borderRadius="50%"
                   overflow="hidden"
                   marginRight={5}
@@ -56,6 +56,7 @@ const RecipesList = ({ onSelectRecipe }: Props) => {
                   <Text
                     color={colorMode === "dark" ? "primary" : "bluecolor"}
                     fontFamily={"Parisienne-Regular"}
+                    align={"left"}
                   >
                     {recipe.recipe.cuisineType.map(
                       (m) => m.charAt(0).toUpperCase() + m.slice(1) + " recipe"
@@ -64,7 +65,7 @@ const RecipesList = ({ onSelectRecipe }: Props) => {
                 </Box>
               </Button>
             </Flex>
-          </ul>
+          </li>
         ))}
       </ul>
     </Box>

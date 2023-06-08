@@ -9,6 +9,14 @@ interface Ingredients {
   weight: number;
   foodId: string;
 }
+interface Large {
+  url: string;
+  width: number;
+  height: number;
+}
+interface Images {
+  LARGE: Large;
+}
 
 export interface Recipe {
   recipe: {
@@ -18,6 +26,7 @@ export interface Recipe {
     source: string;
     url: string;
     ingredients: Ingredients[];
+    images: Images;
     calories: number;
     cuisineType: string[];
     mealType: string[];
