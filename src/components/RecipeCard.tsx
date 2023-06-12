@@ -28,7 +28,7 @@ const RecipeCard = ({ selectedRecipe }: Props) => {
     } else if (selectedRecipe?.recipe.image) {
       return selectedRecipe.recipe.image;
     } else {
-      return "noimage";
+      return noimage;
     }
   };
   return (
@@ -37,12 +37,12 @@ const RecipeCard = ({ selectedRecipe }: Props) => {
       {error && (
         <Text color={colorMode === "dark" ? "#2292c3" : "black"}>{error} </Text>
       )}
-      <Card width={"70vw"} height={"100vh"}>
+      <Card>
         <CardBody>
           <Flex justifyContent="center" alignItems="center">
             <Image
               objectFit={"cover"}
-              height={"50vh"}
+              height={"60vh"}
               width={"100%"}
               src={selectedRecipe ? image() : recipe}
               alt={selectedRecipe?.recipe.label}
@@ -57,8 +57,8 @@ const RecipeCard = ({ selectedRecipe }: Props) => {
                 : "Please select a recipe."}
             </Heading>
             <Text paddingLeft={10} textAlign="start">
-              {selectedRecipe?.recipe.ingredients.map((m) => (
-                <li key={m.foodId}>{m.text}</li>
+              {selectedRecipe?.recipe.ingredients?.map((m, index) => (
+                <li key={index}>{m.text}</li>
               ))}
             </Text>
           </Stack>

@@ -2,13 +2,14 @@ import React from "react";
 import { Box, Flex, HStack, Image, useColorMode } from "@chakra-ui/react";
 import logo from "../../images-logos/logozoomed.webp";
 import ColorModeSwitch from "./ColorModeSwitch";
+import SearchInput from "./SearchInput";
 
 const NavBar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
     <>
       <HStack justifyContent={"space-between"}>
-        <HStack>
+        <HStack justifyItems="center">
           <Image
             boxSize={10}
             borderRadius={5}
@@ -29,6 +30,9 @@ const NavBar = () => {
             Delicious
           </Box>
         </HStack>
+        <Box width={"70%"}>
+          <SearchInput />
+        </Box>
         <ColorModeSwitch />
       </HStack>
     </>

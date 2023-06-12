@@ -16,7 +16,7 @@ const RecipesList = ({ onSelectRecipe }: Props) => {
       )}
       <ul>
         {recipes.map((recipe) => (
-          <li key={recipe.recipe.url}>
+          <li key={recipe.recipe.uri}>
             <Flex padding={1}>
               <Button
                 padding={8}

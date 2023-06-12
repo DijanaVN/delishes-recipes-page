@@ -11,7 +11,7 @@ const ColorModeSwitch = () => {
       />
       <Text fontFamily={"Parisienne-Regular"} fontWeight={"bold"}>
         {" "}
-        {colorMode === "dark" ? "Dark text" : "White text"}
+        {colorMode === "dark" ? "Dark Mode" : "White Mode"}
       </Text>
     </HStack>
   );
