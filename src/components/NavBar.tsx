@@ -4,7 +4,10 @@ import logo from "../../images-logos/logozoomed.webp";
 import ColorModeSwitch from "./ColorModeSwitch";
 import SearchInput from "./SearchInput";
 
-const NavBar = () => {
+interface Props {
+  onSearch: (searchText: string) => void;
+}
+const NavBar = ({ onSearch }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
     <>
@@ -30,8 +33,8 @@ const NavBar = () => {
             Delicious
           </Box>
         </HStack>
-        <Box width={"70%"}>
-          <SearchInput />
+        <Box paddingStart={2} width={"70%"}>
+          <SearchInput onSearch={onSearch} />
         </Box>
         <ColorModeSwitch />
       </HStack>

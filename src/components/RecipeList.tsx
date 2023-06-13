@@ -3,11 +3,12 @@ import useRecipes, { Recipe } from "../hooks/useRecipes";
 
 interface Props {
   onSelectRecipe: (recipe: Recipe) => void;
+  searchText: string;
 }
 
-const RecipesList = ({ onSelectRecipe }: Props) => {
+const RecipesList = ({ onSelectRecipe, searchText }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { recipes, error } = useRecipes();
+  const { recipes, error } = useRecipes(searchText);
 
   return (
     <Box>

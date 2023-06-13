@@ -1,5 +1,5 @@
 import "./App.css";
-import { Grid, GridItem, useColorMode } from "@chakra-ui/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 
 import RecipeCard from "./components/RecipeCard";
@@ -8,8 +8,14 @@ import { useState } from "react";
 import { Recipe } from "./hooks/useRecipes";
 
 function App() {
-  const [selectetRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
-  // const { colorMode, toggleColorMode } = useColorMode();
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [searchText, setSearchText] = useState("");
+
+  const handleSearch = (searchText: string) => {
+    setSearchText(searchText);
+  };
+  console.log(searchText);
+
   return (
     <Grid
       templateAreas={`'nav nav' 'aside main ' 'footer footer'`}
@@ -17,15 +23,16 @@ function App() {
       minHeight={"100vh"}
     >
       <GridItem padding={1} area={"nav"} bg="bluecolor">
-        <NavBar />
+        <NavBar onSearch={handleSearch} />
       </GridItem>
-
       <GridItem minHeight="80vh" area={"aside"}>
-        <RecipesList onSelectRecipe={(recipe) => setSelectedRecipe(recipe)} />
+        <RecipesList
+          onSelectRecipe={(recipe) => setSelectedRecipe(recipe)}
+          searchText={searchText}
+        />
       </GridItem>
-
       <GridItem area={"main"} gridColumn="2 / 3">
-        <RecipeCard selectedRecipe={selectetRecipe} />
+        <RecipeCard selectedRecipe={selectedRecipe} />
       </GridItem>
     </Grid>
   );

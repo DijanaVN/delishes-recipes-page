@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import apiClient, { query, app_id, app_key } from "../services/api-client";
+import apiClient from "../services/api-client";
 
 interface Ingredients {
   text: string;
@@ -33,6 +33,7 @@ export interface Recipe {
     dishType: string[];
     instructions: string[];
     tags: string[];
+    searchText: string;
   };
 }
 
@@ -52,16 +53,20 @@ interface FetchRecipesResponse {
   };
   hits: Recipe[];
 }
-const useRecipes = () => {
+const useRecipes = (searchText: string) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
     const controller = new AbortController();
+    apiClient.defaults.params = {
+      ...apiClient.defaults.params,
+      q: `${searchText}`,
+      app_id: "d7000eb6",
+      app_key: "f0b37c8ae55d287364343e579aa5a494",
+    };
     apiClient
-      .get<FetchRecipesResponse>(
-        `?type=public&q=${query}&app_id=${app_id}&app_key=${app_key}`
-      )
+      .get<FetchRecipesResponse>(`?type=public&`)
       .then((res) => {
         setRecipes(res.data.hits);
       })
@@ -69,7 +74,8 @@ const useRecipes = () => {
         setError(err.message);
       });
     return () => controller.abort();
-  }, []);
+  }, [searchText]);
+
   return { recipes, error };
 };
 
