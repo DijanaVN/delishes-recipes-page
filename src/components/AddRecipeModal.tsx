@@ -90,6 +90,7 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
     };
     console.log(ingredientRefs.current.values);
     onRecipeUpload(recipeData);
+    setIngredientInputs([]);
 
     onClose();
   };

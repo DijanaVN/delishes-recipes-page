@@ -25,13 +25,18 @@ const SearchInput = ({ onSearch }: Props) => {
   };
 
   const ref = useRef<HTMLInputElement>(null);
+  const handleSearch = () => {
+    if (ref.current) {
+      onSearch(ref.current.value);
+      setSearchValue("");
+    }
+  };
 
   return (
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        if (ref.current) onSearch(ref.current.value);
-        setSearchValue(" ");
+        handleSearch();
       }}
     >
       <InputGroup>
@@ -43,6 +48,8 @@ const SearchInput = ({ onSearch }: Props) => {
         <Input
           ref={ref}
           borderRadius={5}
+          value={searchValue}
+          onChange={(event) => setSearchValue(event.target.value)}
           placeholder="Search recipe..."
           variant={"filled"}
           textColor={colorMode === "dark" ? "black" : "black"}
