@@ -10,11 +10,17 @@ import { Recipe } from "./hooks/useRecipes";
 function App() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [searchText, setSearchText] = useState("");
+  const [newRecipe, setNewRecipe] = useState<Recipe | null>(null);
 
   const handleSearch = (searchText: string) => {
     setSearchText(searchText);
   };
-  console.log(searchText);
+
+  const handleAddNewRecipe = (newRecipe: Recipe) => {
+    setNewRecipe(newRecipe);
+  };
+
+  // console.log(handleAddRecipe);
 
   return (
     <Grid
@@ -23,12 +29,13 @@ function App() {
       minHeight={"100vh"}
     >
       <GridItem padding={1} area={"nav"} bg="bluecolor">
-        <NavBar onSearch={handleSearch} />
+        <NavBar onSearch={handleSearch} onRecipeUpload={handleAddNewRecipe} />
       </GridItem>
       <GridItem minHeight="80vh" area={"aside"}>
         <RecipesList
           onSelectRecipe={(recipe) => setSelectedRecipe(recipe)}
           searchText={searchText}
+          newRecipe={newRecipe}
         />
       </GridItem>
       <GridItem area={"main"} gridColumn="2 / 3">

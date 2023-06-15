@@ -21,7 +21,7 @@ const SearchInput = ({ onSearch }: Props) => {
     opacity: 0.8,
   };
   const hoverStyles: SystemStyleObject = {
-    backgroundColor: colorMode === "dark" ? "secondary" : "secondary",
+    backgroundColor: colorMode === "dark" ? "blue.100" : "blue.100",
   };
 
   const ref = useRef<HTMLInputElement>(null);

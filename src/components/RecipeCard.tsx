@@ -10,10 +10,12 @@ import {
   Flex,
   Image,
   useColorMode,
+  Grid,
 } from "@chakra-ui/react";
 import useRecipes, { Recipe } from "../hooks/useRecipes";
 import recipe from "../../images-logos/image-recipe.webp";
 import noimage from "../../images-logos/no-thumbnail-image-placeholder.webp";
+import AddRecipeModal from "./AddRecipeModal";
 
 interface Props {
   selectedRecipe: Recipe | null;
@@ -21,7 +23,7 @@ interface Props {
 
 const RecipeCard = ({ selectedRecipe }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { error } = useRecipes();
+  const { error } = useRecipes("");
   const image = () => {
     if (selectedRecipe?.recipe.images?.LARGE?.url) {
       return selectedRecipe.recipe.images.LARGE.url;
@@ -31,6 +33,7 @@ const RecipeCard = ({ selectedRecipe }: Props) => {
       return noimage;
     }
   };
+
   return (
     <>
       {" "}
@@ -54,12 +57,48 @@ const RecipeCard = ({ selectedRecipe }: Props) => {
             <Heading textAlign="center" size="md">
               {selectedRecipe
                 ? selectedRecipe.recipe.label
-                : "Please select a recipe."}
+                : "Please search and select a recipe."}
             </Heading>
-            <Text paddingLeft={10} textAlign="start">
-              {selectedRecipe?.recipe.ingredients?.map((m, index) => (
-                <li key={index}>{m.text}</li>
-              ))}
+            <Divider />
+            <Text padding={2} textAlign={"center"} fontWeight={"bold"}>
+              {selectedRecipe?.recipe.ingredients ? "RECIPE INGREDIENTS:" : ""}
+            </Text>
+            <Text paddingBottom={2} paddingLeft={10} textAlign="start">
+              {selectedRecipe?.recipe.ingredients && (
+                <Grid
+                  templateColumns="repeat(auto-fit, minmax(250px, 1fr))"
+                  gap={4}
+                >
+                  {selectedRecipe.recipe.ingredients.map((m, index) => (
+                    <li key={index}>{m.text}</li>
+                  ))}
+                </Grid>
+              )}
+            </Text>
+            <Divider />
+            <Text padding={2}>
+              {selectedRecipe?.recipe.mealType && (
+                <>
+                  <i>Meal type</i>: {selectedRecipe.recipe.mealType}
+                </>
+              )}
+            </Text>
+            <Divider />{" "}
+            <Text padding={2}>
+              {selectedRecipe?.recipe.dishType && (
+                <>
+                  <i>Dish type</i>: {selectedRecipe.recipe.dishType}
+                </>
+              )}
+            </Text>
+            <Divider />{" "}
+            <Text padding={2}>
+              {selectedRecipe?.recipe.calories && (
+                <>
+                  <i>Calories</i>: {selectedRecipe.recipe.calories.toFixed(0)}{" "}
+                  kcal.
+                </>
+              )}
             </Text>
           </Stack>
         </CardBody>

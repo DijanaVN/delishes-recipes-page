@@ -3,11 +3,15 @@ import { Box, Flex, HStack, Image, useColorMode } from "@chakra-ui/react";
 import logo from "../../images-logos/logozoomed.webp";
 import ColorModeSwitch from "./ColorModeSwitch";
 import SearchInput from "./SearchInput";
+import AddRecipeModal from "./AddRecipeModal";
+import { Recipe } from "../hooks/useRecipes";
 
 interface Props {
   onSearch: (searchText: string) => void;
+
+  onRecipeUpload: (recipeData: Recipe) => void;
 }
-const NavBar = ({ onSearch }: Props) => {
+const NavBar = ({ onSearch, onRecipeUpload }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
     <>
@@ -22,7 +26,7 @@ const NavBar = ({ onSearch }: Props) => {
             alt="Recipes image-logo"
           />
           <Box
-            paddingLeft={5}
+            paddingLeft={3}
             paddingTop={2}
             fontSize="3xl"
             fontWeight={"bold"}
@@ -33,9 +37,10 @@ const NavBar = ({ onSearch }: Props) => {
             Delicious
           </Box>
         </HStack>
-        <Box paddingStart={2} width={"70%"}>
+        <Box paddingStart={5} width={"70%"}>
           <SearchInput onSearch={onSearch} />
         </Box>
+        <AddRecipeModal onRecipeUpload={onRecipeUpload} />
         <ColorModeSwitch />
       </HStack>
     </>

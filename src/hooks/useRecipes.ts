@@ -1,22 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
-
-interface Ingredients {
-  text: string;
-  quantity: number;
-  measure: string;
-  food: string;
-  weight: number;
-  foodId: string;
-}
-interface Large {
-  url: string;
-  width: number;
-  height: number;
-}
-interface Images {
-  LARGE: Large;
-}
+import axios from "axios";
 
 export interface Recipe {
   recipe: {
@@ -25,14 +9,33 @@ export interface Recipe {
     image: string;
     source: string;
     url: string;
-    ingredients: Ingredients[];
-    images: Images;
+    ingredients: {
+      text: string;
+      quantity: number;
+      measure: string;
+      food: string;
+      weight: number;
+      foodId: string;
+    }[];
+    images: {
+      LARGE: {
+        url: string;
+        width: number;
+        height: number;
+      };
+    };
     calories: number;
     cuisineType: string[];
     mealType: string[];
     dishType: string[];
     instructions: string[];
     tags: string[];
+    totalWeight: number;
+    totalNutrients: {
+      label: string;
+      quantity: number;
+      unit: string;
+    };
     searchText: string;
   };
 }
@@ -56,6 +59,17 @@ interface FetchRecipesResponse {
 const useRecipes = (searchText: string) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [error, setError] = useState<string>("");
+  const [nextPageLink, setNextPageLink] = useState<string | null>(null);
+
+  const fetchRecipes = async (url: string) => {
+    try {
+      const response = await apiClient.get<FetchRecipesResponse>(url);
+      setRecipes((prevRecipes) => [...prevRecipes, ...response.data.hits]);
+      setNextPageLink(response.data._links.next?.href || null);
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -69,6 +83,7 @@ const useRecipes = (searchText: string) => {
       .get<FetchRecipesResponse>(`?type=public&`)
       .then((res) => {
         setRecipes(res.data.hits);
+        setNextPageLink(res.data._links.next?.href || null);
       })
       .catch((err) => {
         setError(err.message);
@@ -76,7 +91,13 @@ const useRecipes = (searchText: string) => {
     return () => controller.abort();
   }, [searchText]);
 
-  return { recipes, error };
+  const fetchNextPage = () => {
+    if (nextPageLink) {
+      fetchRecipes(nextPageLink);
+    }
+  };
+
+  return { recipes, error, fetchNextPage };
 };
 
 export default useRecipes;

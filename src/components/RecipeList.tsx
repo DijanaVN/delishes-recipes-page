@@ -1,23 +1,52 @@
 import { Image, Box, Text, Flex, useColorMode, Button } from "@chakra-ui/react";
 import useRecipes, { Recipe } from "../hooks/useRecipes";
+import "./../App.css";
+import { useEffect, useState } from "react";
 
 interface Props {
   onSelectRecipe: (recipe: Recipe) => void;
   searchText: string;
+  newRecipe?: Recipe | null;
 }
 
-const RecipesList = ({ onSelectRecipe, searchText }: Props) => {
+const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { recipes, error } = useRecipes(searchText);
+  const { recipes, error, fetchNextPage } = useRecipes(searchText);
 
+  const [hoveredRecipe, setHoveredRecipe] = useState<string | null>(null);
+  const [updatedRecipes, setUpdatedRecipes] = useState<Recipe[]>(recipes);
+
+  useEffect(() => {
+    setUpdatedRecipes(recipes);
+    if (newRecipe) {
+      setUpdatedRecipes((prevRecipes) => [newRecipe, ...prevRecipes]);
+    } else {
+      setUpdatedRecipes(recipes);
+    }
+  }, [newRecipe, recipes]);
+
+  const handleMouseEnter = (uri: string) => {
+    setHoveredRecipe(uri);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredRecipe(null);
+  };
+  console.log(newRecipe);
+  console.log(updatedRecipes);
   return (
     <Box>
       {error && (
         <Text color={colorMode === "dark" ? "#2292c3" : "black"}>{error} </Text>
       )}
       <ul>
-        {recipes.map((recipe) => (
-          <li key={recipe.recipe.uri}>
+        {updatedRecipes.map((recipe) => (
+          <li
+            key={recipe.recipe.uri}
+            onMouseEnter={() => handleMouseEnter(recipe.recipe.uri)}
+            onMouseLeave={handleMouseLeave}
+            className={hoveredRecipe === recipe.recipe.uri ? "hovered" : ""}
+          >
             <Flex padding={1}>
               <Button
                 padding={8}
@@ -68,7 +97,11 @@ const RecipesList = ({ onSelectRecipe, searchText }: Props) => {
             </Flex>
           </li>
         ))}
-      </ul>
+      </ul>{" "}
+      <Flex padding={1} justifyContent="flex-end">
+        {}
+        <Button onClick={fetchNextPage}>Load More</Button>
+      </Flex>
     </Box>
   );
 };
