@@ -17,7 +17,6 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
   const [updatedRecipes, setUpdatedRecipes] = useState<Recipe[]>(recipes);
 
   useEffect(() => {
-    setUpdatedRecipes(recipes);
     if (newRecipe) {
       setUpdatedRecipes((prevRecipes) => [newRecipe, ...prevRecipes]);
     } else {

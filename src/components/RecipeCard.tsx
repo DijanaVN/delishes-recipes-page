@@ -70,7 +70,10 @@ const RecipeCard = ({ selectedRecipe }: Props) => {
                   gap={4}
                 >
                   {selectedRecipe.recipe.ingredients.map((m, index) => (
-                    <li key={index}>{m.text}</li>
+                    <li key={index}>
+                      {m.text} , <br /> - quantity: {m.quantity} ,<br />-
+                      measure: {m.measure}
+                    </li>
                   ))}
                 </Grid>
               )}

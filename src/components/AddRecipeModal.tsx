@@ -18,6 +18,7 @@ import { Text } from "@chakra-ui/react";
 import { BsPencilSquare } from "react-icons/bs";
 import { MdAdd, MdUpload } from "react-icons/md";
 import { Recipe } from "../hooks/useRecipes";
+import ownrecipe from "../../images-logos/yourownrecipeslg.webp";
 
 interface Props {
   onRecipeUpload: (recipeData: Recipe) => void;
@@ -25,6 +26,7 @@ interface Props {
 
 const AddRecipeModal = ({ onRecipeUpload }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [ingredientInputs, setIngredientInputs] = useState<string[]>([]);
 
   const titleRef = useRef<HTMLInputElement | null>(null);
   const mealRef = useRef<HTMLInputElement | null>(null);
@@ -32,11 +34,10 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
   const caloriesRef = useRef<HTMLInputElement | null>(null);
   const ingredientRefs = useRef<HTMLInputElement[]>([]);
 
-  const [ingredientInputs, setIngredientInputs] = useState<string[]>([]);
-
   const handleAddIngredient = () => {
     setIngredientInputs((prevInputs) => [...prevInputs, ""]);
   };
+
   const handleIngredientAdd = (index: number, value: string) => {
     setIngredientInputs((prevInputs) => {
       const updatedInputs = [...prevInputs];
@@ -44,21 +45,22 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
       return updatedInputs;
     });
   };
+
   const handleUpload = () => {
-    console.log(ingredientInputs);
     const recipeData: Recipe = {
       recipe: {
-        uri: "",
+        uri: titleRef.current?.value || "",
         label: titleRef.current?.value || "",
-        image: "",
+        image: ownrecipe,
         source: "",
         url: "",
         ingredients: ingredientRefs.current.map((input) => {
-          const [text, quantity] = input.value.split(",");
+          const [text, quantity, measure] = input.value.split(",");
+          console.log(text);
           return {
             text: text.trim(),
             quantity: parseFloat(quantity.trim()) || 0,
-            measure: "",
+            measure: measure,
             food: "",
             weight: 0,
             foodId: "",
@@ -66,15 +68,15 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
         }),
         images: {
           LARGE: {
-            url: "",
+            url: ownrecipe,
             width: 0,
             height: 0,
           },
         },
-        calories: 0,
-        cuisineType: [],
-        mealType: [],
-        dishType: [],
+        calories: Number(caloriesRef.current?.value) || 0,
+        cuisineType: [dishRef.current?.value || ""],
+        mealType: [mealRef.current?.value || ""],
+        dishType: [dishRef.current?.value || ""],
         instructions: [],
         tags: [],
         totalWeight: 0,
@@ -86,7 +88,7 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
         searchText: "",
       },
     };
-
+    console.log(ingredientRefs.current.values);
     onRecipeUpload(recipeData);
 
     onClose();
