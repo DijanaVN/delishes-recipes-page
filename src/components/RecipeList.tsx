@@ -11,7 +11,7 @@ interface Props {
 
 const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { recipes, error, fetchNextPage } = useRecipes(searchText);
+  const { recipes, error, fetchNextPage, hasNextPage } = useRecipes(searchText);
 
   const [hoveredRecipe, setHoveredRecipe] = useState<string | null>(null);
   const [updatedRecipes, setUpdatedRecipes] = useState<Recipe[]>(recipes);
@@ -31,8 +31,7 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
   const handleMouseLeave = () => {
     setHoveredRecipe(null);
   };
-  console.log(newRecipe);
-  console.log(updatedRecipes);
+
   return (
     <Box>
       {error && (
@@ -98,8 +97,7 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
         ))}
       </ul>{" "}
       <Flex padding={1} justifyContent="flex-end">
-        {}
-        <Button onClick={fetchNextPage}>Load More</Button>
+        {hasNextPage && <Button onClick={fetchNextPage}>Load More</Button>}
       </Flex>
     </Box>
   );

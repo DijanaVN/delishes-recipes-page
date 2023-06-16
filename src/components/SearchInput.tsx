@@ -27,8 +27,10 @@ const SearchInput = ({ onSearch }: Props) => {
   const ref = useRef<HTMLInputElement>(null);
   const handleSearch = () => {
     if (ref.current) {
-      onSearch(ref.current.value);
+      const searchText = ref.current.value;
+      onSearch(searchText);
       setSearchValue("");
+      ref.current.value = "";
     }
   };
 

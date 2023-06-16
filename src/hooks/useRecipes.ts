@@ -60,6 +60,7 @@ const useRecipes = (searchText: string) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [error, setError] = useState<string>("");
   const [nextPageLink, setNextPageLink] = useState<string | null>(null);
+  const [hasNextPage, setHasNextPage] = useState<boolean>(false);
 
   const fetchRecipes = async (url: string) => {
     try {
@@ -84,6 +85,7 @@ const useRecipes = (searchText: string) => {
       .then((res) => {
         setRecipes(res.data.hits);
         setNextPageLink(res.data._links.next?.href || null);
+        setHasNextPage(!!res.data._links.next);
       })
       .catch((err) => {
         setError(err.message);
@@ -97,7 +99,7 @@ const useRecipes = (searchText: string) => {
     }
   };
 
-  return { recipes, error, fetchNextPage };
+  return { recipes, error, fetchNextPage, hasNextPage };
 };
 
 export default useRecipes;
