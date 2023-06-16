@@ -56,7 +56,7 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
         url: "",
         ingredients: ingredientRefs.current.map((input) => {
           const [text, quantity, measure] = input.value.split(",");
-          console.log(text);
+
           return {
             text: text.trim(),
             quantity: parseFloat(quantity.trim()) || 0,

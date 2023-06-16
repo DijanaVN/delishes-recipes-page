@@ -56,7 +56,7 @@ interface FetchRecipesResponse {
   };
   hits: Recipe[];
 }
-const useRecipes = (searchText: string) => {
+const useRecipes = (searchText: string, newRecipe: Recipe[]) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [error, setError] = useState<string>("");
   const [nextPageLink, setNextPageLink] = useState<string | null>(null);
@@ -91,7 +91,7 @@ const useRecipes = (searchText: string) => {
         setError(err.message);
       });
     return () => controller.abort();
-  }, [searchText]);
+  }, [searchText, newRecipe]);
 
   const fetchNextPage = () => {
     if (nextPageLink) {
