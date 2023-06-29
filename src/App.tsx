@@ -39,7 +39,7 @@ function App() {
         />
       </GridItem>
       <GridItem area={"main"} gridColumn="2 / 3">
-        <RecipeCard selectedRecipe={selectedRecipe} />
+        <RecipeCard selectedRecipe={selectedRecipe} newRecipe={newRecipe} />
       </GridItem>
     </Grid>
   );
