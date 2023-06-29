@@ -13,18 +13,18 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { recipes, error, fetchNextPage, hasNextPage } = useRecipes(
     searchText,
-    newRecipe
+    newRecipe as unknown as Recipe[]
   );
 
   const [hoveredRecipe, setHoveredRecipe] = useState<string | null>(null);
-  const [updatedRecipes, setUpdatedRecipes] = useState<Recipe[]>(recipes);
+  const [updatedRecipes, setUpdatedRecipes] = useState<Recipe[]>(recipes || []);
 
   useEffect(() => {
     setUpdatedRecipes(recipes || []);
     if (newRecipe) {
       setUpdatedRecipes((prevRecipes) => [newRecipe, ...prevRecipes]);
     } else if (searchText !== "") {
-      setUpdatedRecipes(recipes);
+      setUpdatedRecipes(recipes || []);
     }
     console.log(recipes);
     console.log(updatedRecipes);
@@ -49,7 +49,7 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
             key={recipe.recipe.uri}
             onMouseEnter={() => handleMouseEnter(recipe.recipe.uri)}
             onMouseLeave={handleMouseLeave}
-            // className={hoveredRecipe === recipe.recipe.uri ? "hovered" : ""}
+            className={hoveredRecipe === recipe.recipe.uri ? "hovered" : ""}
           >
             <Flex padding={1}>
               <Button

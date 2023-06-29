@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
-import axios from "axios";
 
 export interface Recipe {
   recipe: {
@@ -56,7 +55,7 @@ interface FetchRecipesResponse {
   };
   hits: Recipe[];
 }
-const useRecipes = (searchText: string, newRecipe: Recipe[]) => {
+const useRecipes = (searchText: string, newRecipe?: (Recipe | null)[]) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [error, setError] = useState<string>("");
   const [nextPageLink, setNextPageLink] = useState<string | null>(null);
@@ -65,7 +64,10 @@ const useRecipes = (searchText: string, newRecipe: Recipe[]) => {
   const fetchRecipes = async (url: string) => {
     try {
       const response = await apiClient.get<FetchRecipesResponse>(url);
-      setRecipes((prevRecipes) => [...prevRecipes, ...response.data.hits]);
+      setRecipes((prevRecipes: Recipe[]) => [
+        ...prevRecipes,
+        ...response.data.hits,
+      ]);
       setNextPageLink(response.data._links.next?.href || null);
     } catch (err: any) {
       setError(err.message);
@@ -90,6 +92,7 @@ const useRecipes = (searchText: string, newRecipe: Recipe[]) => {
       .catch((err) => {
         setError(err.message);
       });
+
     return () => controller.abort();
   }, [searchText, newRecipe]);
 
