@@ -5,11 +5,14 @@ import ColorModeSwitch from "./ColorModeSwitch";
 import SearchInput from "./SearchInput";
 import AddRecipeModal from "./AddRecipeModal";
 import { Recipe } from "../hooks/useRecipes";
+import AddBookmark from "./Addbookmark";
 
 interface Props {
   onSearch: (searchText: string) => void;
 
   onRecipeUpload: (recipeData: Recipe) => void;
+
+  // onBookmarkedRecipes: (bookmarkedRecipes: Recipe[]) => void;
 }
 const NavBar = ({ onSearch, onRecipeUpload }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -41,6 +44,7 @@ const NavBar = ({ onSearch, onRecipeUpload }: Props) => {
           <SearchInput onSearch={onSearch} />
         </Box>
         <AddRecipeModal onRecipeUpload={onRecipeUpload} />
+        <AddBookmark />
         <ColorModeSwitch />
       </HStack>
     </>

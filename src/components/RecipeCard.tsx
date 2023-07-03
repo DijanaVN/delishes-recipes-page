@@ -11,19 +11,51 @@ import {
   Image,
   useColorMode,
   Grid,
+  IconButton,
+  HStack,
 } from "@chakra-ui/react";
 import useRecipes, { Recipe } from "../hooks/useRecipes";
 import recipe from "../../images-logos/image-recipe.webp";
 import noimage from "../../images-logos/no-thumbnail-image-placeholder.webp";
+import { useEffect, useState } from "react";
+import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 
 interface Props {
   selectedRecipe: Recipe | null;
   newRecipe?: Recipe | null;
+  bookmarkedRecipes?: (Recipe | null)[];
 }
 
 const RecipeCard = ({ selectedRecipe, newRecipe }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { error } = useRecipes("");
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [bookmarkedRecipes, setBookmarkedRecipes] = useState<Recipe[]>([]);
+
+  useEffect(() => {
+    selectedRecipe
+      ? setIsBookmarked(bookmarkedRecipes.includes(selectedRecipe))
+      : setIsBookmarked(false);
+    // if (selectedRecipe) {
+    //   setIsBookmarked(bookmarkedRecipes.includes(selectedRecipe));
+    // } else {
+    //   setIsBookmarked(false);
+    // }
+  }, [selectedRecipe, bookmarkedRecipes]);
+
+  const toggleBookmark = () => {
+    if (selectedRecipe) {
+      if (bookmarkedRecipes.includes(selectedRecipe)) {
+        setBookmarkedRecipes((prevRecipes) =>
+          prevRecipes.filter((recipe) => recipe !== selectedRecipe)
+        );
+      } else {
+        setBookmarkedRecipes((prevRecipes) => [...prevRecipes, selectedRecipe]);
+      }
+    }
+  };
+  console.log(bookmarkedRecipes);
+
   const image = () => {
     if (selectedRecipe?.recipe.images?.LARGE?.url) {
       return selectedRecipe.recipe.images.LARGE.url;
@@ -54,16 +86,30 @@ const RecipeCard = ({ selectedRecipe, newRecipe }: Props) => {
           </Flex>
 
           <Stack mt="6" spacing="3">
-            <Heading textAlign="center" size="md">
-              {selectedRecipe
-                ? selectedRecipe.recipe.label
-                : "Please search and select a recipe."}
-            </Heading>
+            <HStack spacing={10} justifyContent={"center"}>
+              <Heading textAlign="center" size="md">
+                {selectedRecipe
+                  ? selectedRecipe.recipe.label
+                  : "Please search and select a recipe."}
+              </Heading>
+              {selectedRecipe && (
+                <IconButton
+                  size={"lg"}
+                  icon={isBookmarked ? <FaBookmark /> : <FaRegBookmark />}
+                  onClick={toggleBookmark}
+                  variant="unstyled"
+                  colorScheme={isBookmarked ? "blue" : undefined}
+                  aria-label={isBookmarked ? "Remove Bookmark" : "Add Bookmark"}
+                />
+              )}
+            </HStack>
             <Divider />
             <Text padding={2} textAlign={"center"} fontWeight={"bold"}>
               {selectedRecipe?.recipe.ingredients ? "RECIPE INGREDIENTS:" : ""}
             </Text>
-            <Text paddingBottom={2} paddingLeft={10} textAlign="start">
+            <div
+              style={{ paddingBottom: 2, paddingLeft: 10, textAlign: "start" }}
+            >
               {selectedRecipe?.recipe.ingredients && (
                 <Grid
                   templateColumns="repeat(auto-fit, minmax(250px, 1fr))"
@@ -78,7 +124,7 @@ const RecipeCard = ({ selectedRecipe, newRecipe }: Props) => {
                   ))}
                 </Grid>
               )}
-            </Text>
+            </div>
             <Divider />
             <Text padding={2}>
               {selectedRecipe?.recipe.mealType && (

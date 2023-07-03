@@ -98,7 +98,7 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
   return (
     <>
       <Button rounded="full" onClick={onOpen}>
-        <BsPencilSquare fontSize="120%" />
+        <BsPencilSquare fontSize="200%" />
         <Text paddingLeft={2}>Add Recipe</Text>
       </Button>
 

@@ -20,6 +20,10 @@ function App() {
     setNewRecipe(newRecipe);
   };
 
+  // const handleBookmarkedRecipes = (bookmarkedRecipes: Recipe[]) => {
+  //   setBookmarkedRecipes(bookmarkedRecipes);
+  // };
+
   // console.log(handleAddRecipe);
 
   return (
@@ -29,7 +33,11 @@ function App() {
       minHeight={"100vh"}
     >
       <GridItem padding={1} area={"nav"} bg="bluecolor">
-        <NavBar onSearch={handleSearch} onRecipeUpload={handleAddNewRecipe} />
+        <NavBar
+          onSearch={handleSearch}
+          onRecipeUpload={handleAddNewRecipe}
+          // onBookmarkedRecipes={handleBookmarkedRecipes}
+        />
       </GridItem>
       <GridItem minHeight="80vh" area={"aside"}>
         <RecipesList
@@ -39,7 +47,11 @@ function App() {
         />
       </GridItem>
       <GridItem area={"main"} gridColumn="2 / 3">
-        <RecipeCard selectedRecipe={selectedRecipe} newRecipe={newRecipe} />
+        <RecipeCard
+          selectedRecipe={selectedRecipe}
+          newRecipe={newRecipe}
+          // bookmarkedRecipes={bookmarkedRecipes}
+        />
       </GridItem>
     </Grid>
   );

@@ -26,8 +26,8 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
     } else if (searchText !== "") {
       setUpdatedRecipes(recipes || []);
     }
-    console.log(recipes);
-    console.log(updatedRecipes);
+    // console.log(recipes);
+    // console.log(updatedRecipes);
   }, [newRecipe, recipes, searchText]);
 
   const handleMouseEnter = (uri: string) => {
