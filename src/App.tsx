@@ -1,16 +1,17 @@
 import "./App.css";
 import { Grid, GridItem } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
-
 import RecipeCard from "./components/RecipeCard";
 import RecipesList from "./components/RecipeList";
 import { useState } from "react";
 import { Recipe } from "./hooks/useRecipes";
+import useBookmarkedRecipes from "./hooks/useBookmarkedRecipes";
 
 function App() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [searchText, setSearchText] = useState("");
   const [newRecipe, setNewRecipe] = useState<Recipe | null>(null);
+  const [b, setb] = useState<Recipe[]>([]);
 
   const handleSearch = (searchText: string) => {
     setSearchText(searchText);
@@ -19,12 +20,15 @@ function App() {
   const handleAddNewRecipe = (newRecipe: Recipe) => {
     setNewRecipe(newRecipe);
   };
+  const handleB = () => {
+    setb(isBookmarkedValue);
+  };
+  const { isBookmarkedValue } = useBookmarkedRecipes({
+    selectedRecipe,
+    onB: handleB,
+  });
 
-  // const handleBookmarkedRecipes = (bookmarkedRecipes: Recipe[]) => {
-  //   setBookmarkedRecipes(bookmarkedRecipes);
-  // };
-
-  // console.log(handleAddRecipe);
+  // console.log(b);
 
   return (
     <Grid
@@ -36,7 +40,8 @@ function App() {
         <NavBar
           onSearch={handleSearch}
           onRecipeUpload={handleAddNewRecipe}
-          // onBookmarkedRecipes={handleBookmarkedRecipes}
+          selectedRecipe={selectedRecipe}
+          bookmarkedRecipes={b}
         />
       </GridItem>
       <GridItem minHeight="80vh" area={"aside"}>
@@ -47,11 +52,7 @@ function App() {
         />
       </GridItem>
       <GridItem area={"main"} gridColumn="2 / 3">
-        <RecipeCard
-          selectedRecipe={selectedRecipe}
-          newRecipe={newRecipe}
-          // bookmarkedRecipes={bookmarkedRecipes}
-        />
+        <RecipeCard selectedRecipe={selectedRecipe} newRecipe={newRecipe} />
       </GridItem>
     </Grid>
   );

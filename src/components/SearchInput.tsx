@@ -1,20 +1,40 @@
 import {
+  Text,
   Input,
   InputGroup,
   InputLeftElement,
   SystemStyleObject,
   useColorMode,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
+import { FieldValues, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z.object({
+  searchText: z
+    .string()
+    .min(3, { message: "Search input must be at least 3 characters." }),
+});
 
 interface Props {
   onSearch: (searchText: string) => void;
 }
 
+interface FormData {
+  searchText: string;
+}
+
 const SearchInput = ({ onSearch }: Props) => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const [searchValue, setSearchValue] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
+
+  const onSubmit = (data: FieldValues) => onSearch(data.searchText);
+
+  const { colorMode } = useColorMode();
 
   const placeholderStyles: SystemStyleObject = {
     color: colorMode === "dark" ? "black" : "black",
@@ -24,34 +44,19 @@ const SearchInput = ({ onSearch }: Props) => {
     backgroundColor: colorMode === "dark" ? "blue.100" : "blue.100",
   };
 
-  const ref = useRef<HTMLInputElement>(null);
-  const handleSearch = () => {
-    if (ref.current) {
-      const searchText = ref.current.value;
-      onSearch(searchText);
-      setSearchValue("");
-      ref.current.value = "";
-    }
-  };
-
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        handleSearch();
-      }}
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <InputGroup>
         <InputLeftElement
           children={
             <BsSearch color={colorMode === "dark" ? "black" : "black"} />
           }
         />
+
         <Input
-          ref={ref}
+          paddingLeft={10}
+          {...register("searchText")}
           borderRadius={5}
-          value={searchValue}
-          onChange={(event) => setSearchValue(event.target.value)}
           placeholder="Search recipe..."
           variant={"filled"}
           textColor={colorMode === "dark" ? "black" : "black"}
@@ -59,6 +64,11 @@ const SearchInput = ({ onSearch }: Props) => {
           _placeholder={placeholderStyles}
           _hover={hoverStyles}
         />
+        {errors.searchText && (
+          <Text paddingLeft={2} color={"yellow"}>
+            {errors.searchText.message}
+          </Text>
+        )}
       </InputGroup>
     </form>
   );

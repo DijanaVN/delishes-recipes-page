@@ -56,11 +56,6 @@ interface FetchRecipesResponse {
   hits: Recipe[];
 }
 const useRecipes = (searchText: string, newRecipe?: (Recipe | null)[]) => {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [error, setError] = useState<string>("");
-  const [nextPageLink, setNextPageLink] = useState<string | null>(null);
-  const [hasNextPage, setHasNextPage] = useState<boolean>(false);
-
   const fetchRecipes = async (url: string) => {
     try {
       const response = await apiClient.get<FetchRecipesResponse>(url);
@@ -74,24 +69,31 @@ const useRecipes = (searchText: string, newRecipe?: (Recipe | null)[]) => {
     }
   };
 
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [error, setError] = useState<string>("");
+  const [nextPageLink, setNextPageLink] = useState<string | null>(null);
+  const [hasNextPage, setHasNextPage] = useState<boolean>(false);
+
   useEffect(() => {
     const controller = new AbortController();
-    apiClient.defaults.params = {
-      ...apiClient.defaults.params,
-      q: `${searchText}`,
-      app_id: "d7000eb6",
-      app_key: "f0b37c8ae55d287364343e579aa5a494",
-    };
-    apiClient
-      .get<FetchRecipesResponse>(`?type=public&`)
-      .then((res) => {
-        setRecipes(res.data.hits);
-        setNextPageLink(res.data._links.next?.href || null);
-        setHasNextPage(!!res.data._links.next);
-      })
-      .catch((err) => {
+    // const signal = controller.signal;
+
+    const fetchData = async () => {
+      try {
+        const response = await apiClient.get<FetchRecipesResponse>(
+          `?type=public&q=${searchText}`
+          // { signal }
+        );
+
+        setRecipes(response.data.hits);
+        setNextPageLink(response.data._links.next?.href || null);
+        setHasNextPage(!!response.data._links.next);
+      } catch (err: any) {
         setError(err.message);
-      });
+      }
+    };
+
+    fetchData();
 
     return () => controller.abort();
   }, [searchText, newRecipe]);

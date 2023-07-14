@@ -17,44 +17,16 @@ import {
 import useRecipes, { Recipe } from "../hooks/useRecipes";
 import recipe from "../../images-logos/image-recipe.webp";
 import noimage from "../../images-logos/no-thumbnail-image-placeholder.webp";
-import { useEffect, useState } from "react";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
+import useBookmarkedRecipes, { Props } from "../hooks/useBookmarkedRecipes";
 
-interface Props {
-  selectedRecipe: Recipe | null;
-  newRecipe?: Recipe | null;
-  bookmarkedRecipes?: (Recipe | null)[];
-}
-
-const RecipeCard = ({ selectedRecipe, newRecipe }: Props) => {
+const RecipeCard = ({ selectedRecipe, newRecipe, onB }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const { toggleBookmark, isBookmarked } = useBookmarkedRecipes({
+    selectedRecipe,
+    onB,
+  });
   const { error } = useRecipes("");
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [bookmarkedRecipes, setBookmarkedRecipes] = useState<Recipe[]>([]);
-
-  useEffect(() => {
-    selectedRecipe
-      ? setIsBookmarked(bookmarkedRecipes.includes(selectedRecipe))
-      : setIsBookmarked(false);
-    // if (selectedRecipe) {
-    //   setIsBookmarked(bookmarkedRecipes.includes(selectedRecipe));
-    // } else {
-    //   setIsBookmarked(false);
-    // }
-  }, [selectedRecipe, bookmarkedRecipes]);
-
-  const toggleBookmark = () => {
-    if (selectedRecipe) {
-      if (bookmarkedRecipes.includes(selectedRecipe)) {
-        setBookmarkedRecipes((prevRecipes) =>
-          prevRecipes.filter((recipe) => recipe !== selectedRecipe)
-        );
-      } else {
-        setBookmarkedRecipes((prevRecipes) => [...prevRecipes, selectedRecipe]);
-      }
-    }
-  };
-  console.log(bookmarkedRecipes);
 
   const image = () => {
     if (selectedRecipe?.recipe.images?.LARGE?.url) {
@@ -65,6 +37,8 @@ const RecipeCard = ({ selectedRecipe, newRecipe }: Props) => {
       return noimage;
     }
   };
+
+  // console.log(isBookmarked);
 
   return (
     <>

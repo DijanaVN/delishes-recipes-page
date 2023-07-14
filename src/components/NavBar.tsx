@@ -1,25 +1,31 @@
-import React from "react";
-import { Box, Flex, HStack, Image, useColorMode } from "@chakra-ui/react";
+import { Box, HStack, Image, useColorMode } from "@chakra-ui/react";
 import logo from "../../images-logos/logozoomed.webp";
 import ColorModeSwitch from "./ColorModeSwitch";
 import SearchInput from "./SearchInput";
 import AddRecipeModal from "./AddRecipeModal";
-import { Recipe } from "../hooks/useRecipes";
 import AddBookmark from "./Addbookmark";
+import { Recipe } from "../hooks/useRecipes";
+import { Props } from "../hooks/useBookmarkedRecipes";
 
-interface Props {
+interface NavBarProps extends Props {
   onSearch: (searchText: string) => void;
-
   onRecipeUpload: (recipeData: Recipe) => void;
-
-  // onBookmarkedRecipes: (bookmarkedRecipes: Recipe[]) => void;
+  bookmarkedRecipes: Recipe[];
+  // onB: (bookmarkedRecipe: Recipe[]) => void;
 }
-const NavBar = ({ onSearch, onRecipeUpload }: Props) => {
+
+const NavBar = ({
+  onSearch,
+  onRecipeUpload,
+  selectedRecipe,
+  bookmarkedRecipes,
+}: NavBarProps) => {
   const { colorMode, toggleColorMode } = useColorMode();
+
   return (
     <>
-      <HStack justifyContent={"space-between"}>
-        <HStack justifyItems="center">
+      <HStack justifyContent="space-between">
+        <HStack justifyItems="center" paddingRight={2}>
           <Image
             boxSize={10}
             borderRadius={5}
@@ -32,7 +38,7 @@ const NavBar = ({ onSearch, onRecipeUpload }: Props) => {
             paddingLeft={3}
             paddingTop={2}
             fontSize="3xl"
-            fontWeight={"bold"}
+            fontWeight="bold"
             fontFamily="Parisienne-Regular"
             color={colorMode === "dark" ? "white" : "black"}
             onClick={toggleColorMode}
@@ -40,11 +46,11 @@ const NavBar = ({ onSearch, onRecipeUpload }: Props) => {
             Delicious
           </Box>
         </HStack>
-        <Box paddingStart={5} width={"70%"}>
+        <Box paddingLeft={5} width="70%">
           <SearchInput onSearch={onSearch} />
         </Box>
         <AddRecipeModal onRecipeUpload={onRecipeUpload} />
-        <AddBookmark />
+        <AddBookmark bookmarkedRecipes={bookmarkedRecipes} />
         <ColorModeSwitch />
       </HStack>
     </>

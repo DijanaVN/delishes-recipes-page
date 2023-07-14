@@ -11,88 +11,92 @@ import {
   FormLabel,
   Input,
   useDisclosure,
-  Flex,
+  Text,
+  HStack,
+  VStack,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
-import { Text } from "@chakra-ui/react";
 import { BsPencilSquare } from "react-icons/bs";
 import { MdAdd, MdUpload } from "react-icons/md";
 import { Recipe } from "../hooks/useRecipes";
 import ownrecipe from "../../images-logos/yourownrecipeslg.webp";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FieldValues, useForm } from "react-hook-form";
+import { ingrediantObjectFunction } from "./ingrediantFunction";
+
+const ingredientSchema = z.array(z.string());
+
+const recipeSchema = z.object({
+  recipe: z.object({
+    label: z
+      .string()
+      .min(3, { message: "Title needs to be at least 3 characters." }),
+    ingredients: ingredientSchema,
+  }),
+
+  images: z.string().optional(),
+  calories: z.number({ invalid_type_error: "Calories field is required." }),
+  mealType: z
+    .string()
+    .min(3, { message: "Meal Type needs to be at least 3 characters." }),
+  dishType: z
+    .string()
+    .min(3, { message: "Dish Type needs to be at least 3 characters." }),
+});
 
 interface Props {
   onRecipeUpload: (recipeData: Recipe) => void;
 }
 
+// interface FormData {
+//   recipe: {
+//     label: string;
+//     ingredients: string[];
+//   };
+//   images: string;
+//   calories: number;
+//   mealType: string;
+//   dishType: string;
+// }
+
+type FormData = z.infer<typeof recipeSchema>;
+
 const AddRecipeModal = ({ onRecipeUpload }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [ingredientInputs, setIngredientInputs] = useState<string[]>([]);
 
-  const titleRef = useRef<HTMLInputElement | null>(null);
-  const mealRef = useRef<HTMLInputElement | null>(null);
-  const dishRef = useRef<HTMLInputElement | null>(null);
-  const caloriesRef = useRef<HTMLInputElement | null>(null);
-  const ingredientRefs = useRef<HTMLInputElement[]>([]);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors, isValid },
+  } = useForm<FormData>({
+    resolver: zodResolver(recipeSchema),
+    defaultValues: {
+      images: ownrecipe,
+    },
+  });
 
-  const handleAddIngredient = () => {
-    setIngredientInputs((prevInputs) => [...prevInputs, ""]);
+  console.log(errors);
+
+  const ingredientsValue = watch("recipe.ingredients");
+
+  const handleIngredientInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = e.target.value;
+
+    // Split the input value into an array of strings
+    const ingredientsArray = value
+      .split(",")
+      .map((ingredient) => ingredient.trim());
+
+    // Update the field value with the array
+    setValue("recipe.ingredients", ingredientsArray);
   };
 
-  const handleIngredientAdd = (index: number, value: string) => {
-    setIngredientInputs((prevInputs) => {
-      const updatedInputs = [...prevInputs];
-      updatedInputs[index] = value;
-      return updatedInputs;
-    });
-  };
-
-  const handleUpload = () => {
-    const recipeData: Recipe = {
-      recipe: {
-        uri: titleRef.current?.value || "",
-        label: titleRef.current?.value || "",
-        image: ownrecipe,
-        source: "",
-        url: "",
-        ingredients: ingredientRefs.current.map((input) => {
-          const [text, quantity, measure] = input.value.split(",");
-
-          return {
-            text: text.trim(),
-            quantity: parseFloat(quantity.trim()) || 0,
-            measure: measure,
-            food: "",
-            weight: 0,
-            foodId: "",
-          };
-        }),
-        images: {
-          LARGE: {
-            url: ownrecipe,
-            width: 0,
-            height: 0,
-          },
-        },
-        calories: Number(caloriesRef.current?.value) || 0,
-        cuisineType: [dishRef.current?.value || ""],
-        mealType: [mealRef.current?.value || ""],
-        dishType: [dishRef.current?.value || ""],
-        instructions: [],
-        tags: [],
-        totalWeight: 0,
-        totalNutrients: {
-          label: "",
-          quantity: 0,
-          unit: "",
-        },
-        searchText: "",
-      },
-    };
-    console.log(ingredientRefs.current.values);
-    onRecipeUpload(recipeData);
-    setIngredientInputs([]);
-
-    onClose();
+  const onSubmit = (data: FieldValues) => {
+    console.log(ingrediantObjectFunction(data));
   };
 
   return (
@@ -120,60 +124,73 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
           </ModalHeader>
 
           <ModalBody pb={6}>
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                console.log("submited");
-              }}
-            >
+            <form onSubmit={handleSubmit(onSubmit)}>
               <FormControl padding={2}>
                 <FormLabel>RECIPE DATA</FormLabel>
-
-                <Input ref={titleRef} placeholder="Title" mb={2} />
-                <Input ref={mealRef} placeholder="Meal type" mb={2} />
-                <Input ref={dishRef} placeholder="Dish type" mb={2} />
-                <Input ref={caloriesRef} placeholder="Calories" mb={2} />
+                <Input
+                  {...register("recipe.label")}
+                  placeholder="Title"
+                  mb={2}
+                />
+                {errors.recipe?.label && (
+                  <Text color="red">{errors.recipe.label.message}</Text>
+                )}
+                <Input
+                  {...register("mealType")}
+                  placeholder="Meal type"
+                  mb={2}
+                />
+                {errors.mealType && (
+                  <Text color="red">{errors.mealType.message}</Text>
+                )}
+                <Input
+                  {...register("dishType")}
+                  placeholder="Dish type"
+                  mb={2}
+                />
+                {errors.dishType && (
+                  <Text color="red">{errors.dishType.message}</Text>
+                )}
+                <Input
+                  {...register("calories", { valueAsNumber: true })}
+                  type="number"
+                  placeholder="Calories"
+                  mb={2}
+                />{" "}
+                {errors.calories && (
+                  <Text color="red">{errors.calories.message}</Text>
+                )}
               </FormControl>
 
               <FormControl padding={2}>
                 <FormLabel>INGREDIENTS</FormLabel>
-                {ingredientInputs.map((ingredient, index) => (
+                <VStack>
+                  <label htmlFor="ing">Ingredient 1</label>
                   <Input
-                    key={index}
-                    ref={(ref) => {
-                      if (ref) {
-                        ingredientRefs.current[index] = ref;
-                      }
-                    }}
-                    placeholder={`Ingredient ${index + 1}`}
-                    value={ingredient}
-                    onChange={(e) => handleIngredientAdd(index, e.target.value)}
-                    mb={2}
+                    id="ing"
+                    value={ingredientsValue?.join(", ") || ""}
+                    onChange={handleIngredientInputChange}
+                    placeholder="Format ingediant, quantity, measure"
                   />
-                ))}
-                <Button
-                  leftIcon={<MdAdd />}
-                  variant="outline"
-                  size="sm"
-                  onClick={handleAddIngredient}
-                >
-                  Add Ingredient
-                </Button>
+                  {errors.recipe?.ingredients && (
+                    <Text color="red">
+                      {errors.recipe?.ingredients?.message}
+                    </Text>
+                  )}
+                </VStack>
               </FormControl>
+              <Button
+                disabled={!isValid}
+                type="submit"
+                rounded={"full"}
+                colorScheme="blue"
+                mr={3}
+              >
+                <MdUpload />
+                <Text paddingLeft={2}>Upload</Text>
+              </Button>
             </form>
           </ModalBody>
-
-          <ModalFooter justifyContent={"center"}>
-            <Button
-              onClick={handleUpload}
-              rounded={"full"}
-              colorScheme="blue"
-              mr={3}
-            >
-              <MdUpload />
-              <Text paddingLeft={2}>Upload</Text>
-            </Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </>
