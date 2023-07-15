@@ -28,6 +28,8 @@ function App() {
     onB: handleB,
   });
 
+  console.log(newRecipe);
+
   // console.log(b);
 
   return (

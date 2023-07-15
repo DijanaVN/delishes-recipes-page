@@ -92,9 +92,7 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
                     fontFamily={"Parisienne-Regular"}
                     align={"left"}
                   >
-                    {recipe.recipe.cuisineType.map(
-                      (m) => m.charAt(0).toUpperCase() + m.slice(1) + " recipe"
-                    )}
+                    {recipe.recipe.cuisineType}
                   </Text>
                 </Box>
               </Button>

@@ -16,26 +16,31 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { BsPencilSquare } from "react-icons/bs";
-import { MdAdd, MdUpload } from "react-icons/md";
+import { MdUpload } from "react-icons/md";
 import { Recipe } from "../hooks/useRecipes";
 import ownrecipe from "../../images-logos/yourownrecipeslg.webp";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldValues, useForm } from "react-hook-form";
 import { ingrediantObjectFunction } from "./ingrediantFunction";
+import { useState } from "react";
 
 const ingredientSchema = z.array(z.string());
 
 const recipeSchema = z.object({
   recipe: z.object({
+    uri: z.string(),
     label: z
       .string()
       .min(3, { message: "Title needs to be at least 3 characters." }),
     ingredients: ingredientSchema,
+    image: z.string(),
   }),
 
-  images: z.string().optional(),
   calories: z.number({ invalid_type_error: "Calories field is required." }),
+  cuisineType: z
+    .string()
+    .min(3, { message: "Cuisine Type needs to be at least 3 characters." }),
   mealType: z
     .string()
     .min(3, { message: "Meal Type needs to be at least 3 characters." }),
@@ -48,32 +53,38 @@ interface Props {
   onRecipeUpload: (recipeData: Recipe) => void;
 }
 
-// interface FormData {
-//   recipe: {
-//     label: string;
-//     ingredients: string[];
-//   };
-//   images: string;
-//   calories: number;
-//   mealType: string;
-//   dishType: string;
-// }
-
 type FormData = z.infer<typeof recipeSchema>;
 
 const AddRecipeModal = ({ onRecipeUpload }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isUploaded, setIsUploaded] = useState(false);
+  const {
+    isOpen: isSuccessModalOpen,
+    onOpen: openSuccessModal,
+    onClose: closeSuccessModal,
+  } = useDisclosure();
+
+  const generateRandomUniqueUri = (): string => {
+    const timestamp = Date.now(); // Get the current timestamp in milliseconds
+    const randomNum = Math.floor(Math.random() * 1000); // Generate a random number between 0 and 999
+    const uri = `${timestamp}${randomNum}`; // Concatenate the timestamp and random number
+    return uri;
+  };
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors, isValid },
   } = useForm<FormData>({
     resolver: zodResolver(recipeSchema),
     defaultValues: {
-      images: ownrecipe,
+      recipe: {
+        uri: generateRandomUniqueUri(),
+        image: ownrecipe,
+      },
     },
   });
 
@@ -96,7 +107,17 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
   };
 
   const onSubmit = (data: FieldValues) => {
+    onRecipeUpload(ingrediantObjectFunction(data));
     console.log(ingrediantObjectFunction(data));
+    setIsUploaded(true);
+    openSuccessModal();
+    onClose();
+    reset();
+  };
+
+  const handleSuccessModalClose = () => {
+    setIsUploaded(false);
+    closeSuccessModal();
   };
 
   return (
@@ -105,7 +126,6 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
         <BsPencilSquare fontSize="200%" />
         <Text paddingLeft={2}>Add Recipe</Text>
       </Button>
-
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -124,9 +144,24 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
           </ModalHeader>
 
           <ModalBody pb={6}>
+            {isUploaded && (
+              <Text color="green" mb={4}>
+                Recipe successfully uploaded!
+              </Text>
+            )}
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormControl padding={2}>
                 <FormLabel>RECIPE DATA</FormLabel>
+                <Input
+                  defaultValue={ownrecipe}
+                  {...register("recipe.image")}
+                  type="hidden"
+                />
+                <Input
+                  defaultValue={generateRandomUniqueUri()}
+                  {...register("recipe.uri")}
+                  type="hidden"
+                />
                 <Input
                   {...register("recipe.label")}
                   placeholder="Title"
@@ -134,6 +169,14 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
                 />
                 {errors.recipe?.label && (
                   <Text color="red">{errors.recipe.label.message}</Text>
+                )}
+                <Input
+                  {...register("cuisineType")}
+                  placeholder="Cuisine type"
+                  mb={2}
+                />
+                {errors.cuisineType && (
+                  <Text color="red">{errors.cuisineType.message}</Text>
                 )}
                 <Input
                   {...register("mealType")}
@@ -191,6 +234,21 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
               </Button>
             </form>
           </ModalBody>
+        </ModalContent>
+      </Modal>{" "}
+      <Modal isOpen={isSuccessModalOpen} onClose={handleSuccessModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Congrats!</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text color="green">Recipe successfully uploaded!</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={handleSuccessModalClose}>
+              Close
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>
