@@ -29,10 +29,14 @@ const SearchInput = ({ onSearch }: Props) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  const onSubmit = (data: FieldValues) => onSearch(data.searchText);
+  const onSubmit = (data: FieldValues) => {
+    onSearch(data.searchText);
+    reset();
+  };
 
   const { colorMode } = useColorMode();
 

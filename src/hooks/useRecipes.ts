@@ -1,40 +1,28 @@
 import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
+import { CanceledError } from "axios";
 
 export interface Recipe {
   recipe: {
     uri: string;
     label: string;
     image: string;
-    source: string;
     url: string;
+    source: string;
     ingredients: {
       text: string;
       quantity: number;
       measure: string;
-      food: string;
-      weight: number;
-      foodId: string;
     }[];
     images: {
       LARGE: {
         url: string;
-        width: number;
-        height: number;
       };
     };
     calories: number;
     cuisineType: string[];
     mealType: string[];
     dishType: string[];
-    instructions: string[];
-    tags: string[];
-    totalWeight: number;
-    totalNutrients: {
-      label: string;
-      quantity: number;
-      unit: string;
-    };
     searchText: string;
   };
 }
@@ -73,27 +61,26 @@ const useRecipes = (searchText: string, newRecipe?: (Recipe | null)[]) => {
   const [error, setError] = useState<string>("");
   const [nextPageLink, setNextPageLink] = useState<string | null>(null);
   const [hasNextPage, setHasNextPage] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
-    // const signal = controller.signal;
-
-    const fetchData = async () => {
-      try {
-        const response = await apiClient.get<FetchRecipesResponse>(
-          `?type=public&q=${searchText}`
-          // { signal }
-        );
-
-        setRecipes(response.data.hits);
-        setNextPageLink(response.data._links.next?.href || null);
-        setHasNextPage(!!response.data._links.next);
-      } catch (err: any) {
-        setError(err.message);
-      }
-    };
-
-    fetchData();
+    setLoading(true);
+    apiClient
+      .get<FetchRecipesResponse>(`?type=public&q=${searchText}`, {
+        signal: controller.signal,
+      })
+      .then((res) => {
+        setRecipes(res.data.hits);
+        setNextPageLink(res.data._links.next?.href || null);
+        setHasNextPage(!!res.data._links.next);
+        setLoading(false);
+      })
+      .catch((error) => {
+        if (error instanceof CanceledError) return;
+        setError(error.message);
+        setLoading(false);
+      });
 
     return () => controller.abort();
   }, [searchText, newRecipe]);
@@ -104,7 +91,7 @@ const useRecipes = (searchText: string, newRecipe?: (Recipe | null)[]) => {
     }
   };
 
-  return { recipes, error, fetchNextPage, hasNextPage };
+  return { recipes, error, fetchNextPage, hasNextPage, isLoading, setLoading };
 };
 
 export default useRecipes;

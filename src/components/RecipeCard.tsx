@@ -13,6 +13,7 @@ import {
   Grid,
   IconButton,
   HStack,
+  Center,
 } from "@chakra-ui/react";
 import useRecipes, { Recipe } from "../hooks/useRecipes";
 import recipe from "../../images-logos/image-recipe.webp";
@@ -26,7 +27,7 @@ const RecipeCard = ({ selectedRecipe, newRecipe, onB }: Props) => {
     selectedRecipe,
     onB,
   });
-  const { error } = useRecipes("");
+  const { isLoading } = useRecipes("");
 
   const image = () => {
     if (selectedRecipe?.recipe.images?.LARGE?.url) {
@@ -42,13 +43,29 @@ const RecipeCard = ({ selectedRecipe, newRecipe, onB }: Props) => {
 
   return (
     <>
-      {" "}
-      {error && (
-        <Text color={colorMode === "dark" ? "#2292c3" : "black"}>{error} </Text>
+      {isLoading && (
+        <Center minHeight="100vh">
+          <Button
+            isLoading
+            colorScheme="teal"
+            variant="unstyled"
+            loadingText="Loading..."
+          />
+        </Center>
       )}
       <Card>
         <CardBody>
           <Flex justifyContent="center" alignItems="center">
+            {isLoading && (
+              <Center minHeight="100vh">
+                <Button
+                  isLoading
+                  colorScheme="teal"
+                  variant="unstyled"
+                  loadingText="Loading..."
+                />
+              </Center>
+            )}
             <Image
               objectFit={"cover"}
               height={"60vh"}

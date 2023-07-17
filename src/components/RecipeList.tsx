@@ -1,4 +1,12 @@
-import { Image, Box, Text, Flex, useColorMode, Button } from "@chakra-ui/react";
+import {
+  Image,
+  Box,
+  Text,
+  Flex,
+  useColorMode,
+  Button,
+  Center,
+} from "@chakra-ui/react";
 import useRecipes, { Recipe } from "../hooks/useRecipes";
 import "./../App.css";
 import { useEffect, useState } from "react";
@@ -11,7 +19,7 @@ interface Props {
 
 const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { recipes, error, fetchNextPage, hasNextPage } = useRecipes(
+  const { recipes, error, fetchNextPage, hasNextPage, isLoading } = useRecipes(
     searchText,
     newRecipe as unknown as Recipe[]
   );
@@ -43,6 +51,16 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
       {error && (
         <Text color={colorMode === "dark" ? "#2292c3" : "black"}>{error} </Text>
       )}
+      {isLoading && (
+        <Center minHeight="100vh">
+          <Button
+            isLoading
+            colorScheme="teal"
+            variant="unstyled"
+            loadingText="Loading..."
+          />
+        </Center>
+      )}
       <ul>
         {updatedRecipes.map((recipe) => (
           <li
@@ -54,7 +72,9 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
             <Flex padding={1}>
               <Button
                 padding={8}
-                onClick={() => onSelectRecipe(recipe)}
+                onClick={() => {
+                  onSelectRecipe(recipe);
+                }}
                 variant={"solid"}
                 display="flex"
                 flexDirection="row"
