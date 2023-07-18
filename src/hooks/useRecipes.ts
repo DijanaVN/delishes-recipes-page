@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
 import { CanceledError } from "axios";
+import recipeService, {
+  FetchRecipesResponse,
+} from "../services/recipe-service";
 
 export interface Recipe {
   recipe: {
@@ -27,36 +30,7 @@ export interface Recipe {
   };
 }
 
-interface FetchRecipesResponse {
-  from: number;
-  to: number;
-  count: number;
-  _links: {
-    self: {
-      href: string;
-      title: string;
-    };
-    next: {
-      href: string;
-      title: string;
-    };
-  };
-  hits: Recipe[];
-}
 const useRecipes = (searchText: string, newRecipe?: (Recipe | null)[]) => {
-  const fetchRecipes = async (url: string) => {
-    try {
-      const response = await apiClient.get<FetchRecipesResponse>(url);
-      setRecipes((prevRecipes: Recipe[]) => [
-        ...prevRecipes,
-        ...response.data.hits,
-      ]);
-      setNextPageLink(response.data._links.next?.href || null);
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
-
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [error, setError] = useState<string>("");
   const [nextPageLink, setNextPageLink] = useState<string | null>(null);
@@ -64,12 +38,10 @@ const useRecipes = (searchText: string, newRecipe?: (Recipe | null)[]) => {
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    const controller = new AbortController();
     setLoading(true);
-    apiClient
-      .get<FetchRecipesResponse>(`?type=public&q=${searchText}`, {
-        signal: controller.signal,
-      })
+    const { request, cancel } = recipeService.getAllRecipesSearch(searchText);
+
+    request
       .then((res) => {
         setRecipes(res.data.hits);
         setNextPageLink(res.data._links.next?.href || null);
@@ -81,9 +53,23 @@ const useRecipes = (searchText: string, newRecipe?: (Recipe | null)[]) => {
         setError(error.message);
         setLoading(false);
       });
-
-    return () => controller.abort();
+    return () => cancel();
   }, [searchText, newRecipe]);
+
+  const fetchRecipes = (url: string) => {
+    recipeService
+      .getLoadMoreRecipes(url)
+      .then((res) => {
+        setRecipes((prevRecipes: Recipe[]) => [
+          ...prevRecipes,
+          ...res.data.hits,
+        ]);
+        setNextPageLink(res.data._links.next?.href || null);
+      })
+      .catch((err) => {
+        setError(err.message);
+      });
+  };
 
   const fetchNextPage = () => {
     if (nextPageLink) {
