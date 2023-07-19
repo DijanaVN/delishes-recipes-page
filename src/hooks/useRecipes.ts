@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import apiClient from "../services/api-client";
 import { CanceledError } from "axios";
-import recipeService, {
-  FetchRecipesResponse,
-} from "../services/recipe-service";
+import recipeService from "../services/recipe-service";
+import { useQuery } from "@tanstack/react-query";
 
 export interface Recipe {
   recipe: {
@@ -31,11 +29,17 @@ export interface Recipe {
 }
 
 const useRecipes = (searchText: string, newRecipe?: (Recipe | null)[]) => {
+  // useQuery({
+  //   queryKey:['recipes'],
+  //   queryFn:()
+  // });
+
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [error, setError] = useState<string>("");
   const [nextPageLink, setNextPageLink] = useState<string | null>(null);
   const [hasNextPage, setHasNextPage] = useState<boolean>(false);
   const [isLoading, setLoading] = useState(false);
+  const [updatedRecipes, setUpdatedRecipes] = useState<Recipe[]>(recipes || []);
 
   useEffect(() => {
     setLoading(true);
@@ -77,7 +81,26 @@ const useRecipes = (searchText: string, newRecipe?: (Recipe | null)[]) => {
     }
   };
 
-  return { recipes, error, fetchNextPage, hasNextPage, isLoading, setLoading };
+  useEffect(() => {
+    setUpdatedRecipes(recipes || []);
+    if (newRecipe) {
+      setUpdatedRecipes((prevRecipes) => [newRecipe, ...prevRecipes]);
+    } else if (searchText !== "") {
+      setUpdatedRecipes(recipes || []);
+    }
+    // console.log(recipes);
+    // console.log(updatedRecipes);
+  }, [newRecipe, recipes, searchText]);
+
+  return {
+    recipes,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+    setLoading,
+    updatedRecipes,
+  };
 };
 
 export default useRecipes;

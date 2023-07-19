@@ -3,23 +3,25 @@ import logo from "../../images-logos/logozoomed.webp";
 import ColorModeSwitch from "./ColorModeSwitch";
 import SearchInput from "./SearchInput";
 import AddRecipeModal from "./AddRecipeModal";
-import AddBookmark from "./Addbookmark";
+// import AddBookmark from "./Addbookmark";
 import { Recipe } from "../hooks/useRecipes";
-import { Props } from "../hooks/useBookmarkedRecipes";
+import { Props } from "./RecipeCard";
+import BookmarkedRecipes from "./BookmarkedList";
+// import { Props } from "../hooks/useBookmarkedRecipes";
 
 interface NavBarProps extends Props {
   onSearch: (searchText: string) => void;
   onRecipeUpload: (recipeData: Recipe) => void;
-  bookmarkedRecipes: Recipe[];
+  // bookmarkedRecipes: Recipe[];
   // onB: (bookmarkedRecipe: Recipe[]) => void;
 }
 
 const NavBar = ({
   onSearch,
   onRecipeUpload,
-  selectedRecipe,
-  bookmarkedRecipes,
-}: NavBarProps) => {
+}: // bookmarkedRecipes,
+// onB,
+NavBarProps) => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
@@ -50,7 +52,8 @@ const NavBar = ({
           <SearchInput onSearch={onSearch} />
         </Box>
         <AddRecipeModal onRecipeUpload={onRecipeUpload} />
-        <AddBookmark bookmarkedRecipes={bookmarkedRecipes} />
+        <BookmarkedRecipes />
+        {/* <AddBookmark bookmarkedRecipes={bookmarkedRecipes} /> */}
         <ColorModeSwitch />
       </HStack>
     </>

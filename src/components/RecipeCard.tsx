@@ -19,14 +19,18 @@ import useRecipes, { Recipe } from "../hooks/useRecipes";
 import recipe from "../../images-logos/image-recipe.webp";
 import noimage from "../../images-logos/no-thumbnail-image-placeholder.webp";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
-import useBookmarkedRecipes, { Props } from "../hooks/useBookmarkedRecipes";
 
+// import useBookmarkedRecipes, { Props } from "../hooks/useBookmarkedRecipes";
+// import IconButtonBookmark from "./iconButton";
+
+export interface Props {
+  selectedRecipe: Recipe | null;
+  newRecipe?: Recipe | null;
+  onB?: (bookmarkedRecipes: Recipe[]) => void;
+}
 const RecipeCard = ({ selectedRecipe, newRecipe, onB }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { toggleBookmark, isBookmarked } = useBookmarkedRecipes({
-    selectedRecipe,
-    onB,
-  });
+
   const { isLoading } = useRecipes("");
 
   const image = () => {
@@ -83,16 +87,7 @@ const RecipeCard = ({ selectedRecipe, newRecipe, onB }: Props) => {
                   ? selectedRecipe.recipe.label
                   : "Please search and select a recipe."}
               </Heading>
-              {selectedRecipe && (
-                <IconButton
-                  size={"lg"}
-                  icon={isBookmarked ? <FaBookmark /> : <FaRegBookmark />}
-                  onClick={toggleBookmark}
-                  variant="unstyled"
-                  colorScheme={isBookmarked ? "blue" : undefined}
-                  aria-label={isBookmarked ? "Remove Bookmark" : "Add Bookmark"}
-                />
-              )}
+              {/* {selectedRecipe && <IconButtonBookmark />} */}
             </HStack>
             <Divider />
             <Text padding={2} textAlign={"center"} fontWeight={"bold"}>

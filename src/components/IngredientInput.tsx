@@ -1,4 +1,3 @@
-import React from "react";
 import { VStack, Input, Text, FormControl, FormLabel } from "@chakra-ui/react";
 
 interface Props {

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Recipe } from "./useRecipes";
-import React from "react";
 
 export interface Props {
   selectedRecipe: Recipe | null;
@@ -28,12 +27,6 @@ const useBookmarkedRecipes = ({
       : setIsBookmarked(false);
   }, [selectedRecipe, isBookmarkedValue]);
 
-  useEffect(() => {
-    if (onB) {
-      onB(isBookmarkedValue);
-    }
-  }, [isBookmarkedValue, onB]);
-
   const toggleBookmark = () => {
     if (selectedRecipe) {
       if (isBookmarkedValue.includes(selectedRecipe)) {
@@ -47,9 +40,7 @@ const useBookmarkedRecipes = ({
       }
     }
   };
-
-  // console.log(isBookmarkedValue);
-  // console.log(selectedRecipe);
+  console.log(isBookmarkedValue);
 
   return {
     toggleBookmark,

@@ -6,10 +6,12 @@ import {
   useColorMode,
   Button,
   Center,
+  List,
+  ListItem,
 } from "@chakra-ui/react";
 import useRecipes, { Recipe } from "../hooks/useRecipes";
 import "./../App.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface Props {
   onSelectRecipe: (recipe: Recipe) => void;
@@ -19,33 +21,16 @@ interface Props {
 
 const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { recipes, error, fetchNextPage, hasNextPage, isLoading } = useRecipes(
-    searchText,
-    newRecipe as unknown as Recipe[]
-  );
+  const { error, fetchNextPage, hasNextPage, isLoading, updatedRecipes } =
+    useRecipes(searchText, newRecipe as unknown as Recipe[]);
 
   const [hoveredRecipe, setHoveredRecipe] = useState<string | null>(null);
-  const [updatedRecipes, setUpdatedRecipes] = useState<Recipe[]>(recipes || []);
-
-  useEffect(() => {
-    setUpdatedRecipes(recipes || []);
-    if (newRecipe) {
-      setUpdatedRecipes((prevRecipes) => [newRecipe, ...prevRecipes]);
-    } else if (searchText !== "") {
-      setUpdatedRecipes(recipes || []);
-    }
-    // console.log(recipes);
-    // console.log(updatedRecipes);
-  }, [newRecipe, recipes, searchText]);
-
   const handleMouseEnter = (uri: string) => {
     setHoveredRecipe(uri);
   };
-
   const handleMouseLeave = () => {
     setHoveredRecipe(null);
   };
-
   return (
     <Box>
       {error && (
@@ -61,9 +46,9 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
           />
         </Center>
       )}
-      <ul>
+      <List>
         {updatedRecipes.map((recipe) => (
-          <li
+          <ListItem
             key={recipe.recipe.uri}
             onMouseEnter={() => handleMouseEnter(recipe.recipe.uri)}
             onMouseLeave={handleMouseLeave}
@@ -117,9 +102,9 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
                 </Box>
               </Button>
             </Flex>
-          </li>
+          </ListItem>
         ))}
-      </ul>{" "}
+      </List>{" "}
       <Flex padding={1} justifyContent="flex-end">
         {hasNextPage && <Button onClick={fetchNextPage}>Load More</Button>}
       </Flex>

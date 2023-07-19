@@ -4,8 +4,8 @@ import NavBar from "./components/NavBar";
 import RecipeCard from "./components/RecipeCard";
 import RecipesList from "./components/RecipeList";
 import { useState } from "react";
-import { Recipe } from "./hooks/useRecipes";
-import useBookmarkedRecipes from "./hooks/useBookmarkedRecipes";
+import useRecipes, { Recipe } from "./hooks/useRecipes";
+// import useBookmarkedRecipes from "./hooks/useBookmarkedRecipes";
 
 function App() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
@@ -20,17 +20,8 @@ function App() {
   const handleAddNewRecipe = (newRecipe: Recipe) => {
     setNewRecipe(newRecipe);
   };
-  const handleB = () => {
-    setb(isBookmarkedValue);
-  };
-  const { isBookmarkedValue } = useBookmarkedRecipes({
-    selectedRecipe,
-    onB: handleB,
-  });
 
   console.log(newRecipe);
-
-  // console.log(b);
 
   return (
     <Grid
@@ -43,7 +34,6 @@ function App() {
           onSearch={handleSearch}
           onRecipeUpload={handleAddNewRecipe}
           selectedRecipe={selectedRecipe}
-          bookmarkedRecipes={b}
         />
       </GridItem>
       <GridItem minHeight="80vh" area={"aside"}>

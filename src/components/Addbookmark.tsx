@@ -38,36 +38,36 @@
 //   );
 // };
 
+// // export default AddBookmark;
+// import { Button, Text } from "@chakra-ui/react";
+// import { FaRegBookmark } from "react-icons/fa";
+// import BookmarkedList from "./BookmarkedList";
+// import { useState } from "react";
+// import { Recipe } from "../hooks/useRecipes";
+
+// export interface Props {
+//   bookmarkedRecipes: Recipe[];
+// }
+
+// const AddBookmark = ({ bookmarkedRecipes }: Props) => {
+//   const [showBookmarkedRecipes, setShowBookmarkedRecipes] = useState(false);
+
+//   const handleBookmarkClick = () => {
+//     setShowBookmarkedRecipes(!showBookmarkedRecipes);
+//   };
+
+//   return (
+//     <>
+//       <Button onClick={handleBookmarkClick} rounded="full">
+//         <FaRegBookmark fontSize="180%" />
+//         <Text paddingLeft={2}>Bookmarks</Text>
+//       </Button>
+
+//       {showBookmarkedRecipes && (
+//         <BookmarkedList bookmarkedRecipes={bookmarkedRecipes} />
+//       )}
+//     </>
+//   );
+// };
+
 // export default AddBookmark;
-import { Button, Text } from "@chakra-ui/react";
-import { FaRegBookmark } from "react-icons/fa";
-import BookmarkedList from "./BookmarkedList";
-import { useState } from "react";
-import { Recipe } from "../hooks/useRecipes";
-
-interface Props {
-  bookmarkedRecipes: Recipe[];
-}
-
-const AddBookmark = ({ bookmarkedRecipes }: Props) => {
-  const [showBookmarkedRecipes, setShowBookmarkedRecipes] = useState(false);
-
-  const handleBookmarkClick = () => {
-    setShowBookmarkedRecipes(!showBookmarkedRecipes);
-  };
-
-  return (
-    <>
-      <Button onClick={handleBookmarkClick} rounded="full">
-        <FaRegBookmark fontSize="180%" />
-        <Text paddingLeft={2}>Bookmarks</Text>
-      </Button>
-
-      {showBookmarkedRecipes && (
-        <BookmarkedList bookmarkedRecipes={bookmarkedRecipes} />
-      )}
-    </>
-  );
-};
-
-export default AddBookmark;

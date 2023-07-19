@@ -5,6 +5,8 @@ import {
   InputLeftElement,
   SystemStyleObject,
   useColorMode,
+  InputRightElement,
+  Button,
 } from "@chakra-ui/react";
 import { BsSearch } from "react-icons/bs";
 import { FieldValues, useForm } from "react-hook-form";
@@ -52,6 +54,7 @@ const SearchInput = ({ onSearch }: Props) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <InputGroup>
         <InputLeftElement
+          pointerEvents="none"
           children={
             <BsSearch color={colorMode === "dark" ? "black" : "black"} />
           }
@@ -68,6 +71,19 @@ const SearchInput = ({ onSearch }: Props) => {
           _placeholder={placeholderStyles}
           _hover={hoverStyles}
         />
+        <InputRightElement width="2.5rem">
+          <Button
+            type="submit"
+            h="100%"
+            size="sm"
+            borderRadius="5"
+            bgColor={colorMode === "dark" ? "blue.100" : "blue.100"}
+            color={colorMode === "dark" ? "black" : "black"}
+          >
+            <BsSearch />
+          </Button>
+        </InputRightElement>
+
         {errors.searchText && (
           <Text paddingLeft={2} color={"yellow"}>
             {errors.searchText.message}
