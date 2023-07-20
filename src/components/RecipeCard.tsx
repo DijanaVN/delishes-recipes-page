@@ -31,7 +31,7 @@ export interface Props {
 const RecipeCard = ({ selectedRecipe, newRecipe, onB }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
 
-  const { isLoading } = useRecipes("");
+  // const { isLoading } = useRecipes("");
 
   const image = () => {
     if (selectedRecipe?.recipe.images?.LARGE?.url) {
@@ -47,7 +47,7 @@ const RecipeCard = ({ selectedRecipe, newRecipe, onB }: Props) => {
 
   return (
     <>
-      {isLoading && (
+      {/* {isLoading && (
         <Center minHeight="100vh">
           <Button
             isLoading
@@ -56,11 +56,11 @@ const RecipeCard = ({ selectedRecipe, newRecipe, onB }: Props) => {
             loadingText="Loading..."
           />
         </Center>
-      )}
+      )} */}
       <Card>
         <CardBody>
           <Flex justifyContent="center" alignItems="center">
-            {isLoading && (
+            {/* {isLoading && (
               <Center minHeight="100vh">
                 <Button
                   isLoading
@@ -69,7 +69,7 @@ const RecipeCard = ({ selectedRecipe, newRecipe, onB }: Props) => {
                   loadingText="Loading..."
                 />
               </Center>
-            )}
+            )} */}
             <Image
               objectFit={"cover"}
               height={"60vh"}

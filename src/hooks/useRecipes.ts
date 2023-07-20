@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CanceledError } from "axios";
-import recipeService from "../services/recipe-service";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import apiClient from "../services/api-client";
 
 export interface Recipe {
   recipe: {
@@ -27,79 +27,46 @@ export interface Recipe {
     searchText: string;
   };
 }
+export interface FetchRecipesResponse {
+  from: number;
+  to: number;
+  count: number;
+  _links: {
+    self: {
+      href: string;
+      title: string;
+    };
+    next: {
+      href: string;
+      title: string;
+    };
+  };
+  hits: Recipe[];
+  searchText: string;
+}
 
 const useRecipes = (searchText: string, newRecipe?: (Recipe | null)[]) => {
-  // useQuery({
-  //   queryKey:['recipes'],
-  //   queryFn:()
-  // });
-
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [error, setError] = useState<string>("");
-  const [nextPageLink, setNextPageLink] = useState<string | null>(null);
-  const [hasNextPage, setHasNextPage] = useState<boolean>(false);
-  const [isLoading, setLoading] = useState(false);
-  const [updatedRecipes, setUpdatedRecipes] = useState<Recipe[]>(recipes || []);
-
-  useEffect(() => {
-    setLoading(true);
-    const { request, cancel } = recipeService.getAllRecipesSearch(searchText);
-
-    request
-      .then((res) => {
-        setRecipes(res.data.hits);
-        setNextPageLink(res.data._links.next?.href || null);
-        setHasNextPage(!!res.data._links.next);
-        setLoading(false);
-      })
-      .catch((error) => {
-        if (error instanceof CanceledError) return;
-        setError(error.message);
-        setLoading(false);
-      });
-    return () => cancel();
-  }, [searchText, newRecipe]);
-
-  const fetchRecipes = (url: string) => {
-    recipeService
-      .getLoadMoreRecipes(url)
-      .then((res) => {
-        setRecipes((prevRecipes: Recipe[]) => [
-          ...prevRecipes,
-          ...res.data.hits,
-        ]);
-        setNextPageLink(res.data._links.next?.href || null);
-      })
-      .catch((err) => {
-        setError(err.message);
-      });
+  const query = {
+    pageSize: 10,
   };
-
-  const fetchNextPage = () => {
-    if (nextPageLink) {
-      fetchRecipes(nextPageLink);
-    }
-  };
-
-  useEffect(() => {
-    setUpdatedRecipes(recipes || []);
-    if (newRecipe) {
-      setUpdatedRecipes((prevRecipes) => [newRecipe, ...prevRecipes]);
-    } else if (searchText !== "") {
-      setUpdatedRecipes(recipes || []);
-    }
-    // console.log(recipes);
-    // console.log(updatedRecipes);
-  }, [newRecipe, recipes, searchText]);
+  const searchQuery = useInfiniteQuery({
+    queryKey: [searchText, query],
+    queryFn: ({ pageParam = 1 }) =>
+      apiClient
+        .get<FetchRecipesResponse>(searchText, {
+          params: {
+            _start: (pageParam - 1) * query.pageSize,
+            _limit: query.pageSize,
+          },
+        })
+        .then((res) => res.data.hits),
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.length > 0 ? allPages.length + 1 : undefined;
+    },
+  });
 
   return {
-    recipes,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isLoading,
-    setLoading,
-    updatedRecipes,
+    searchQuery,
   };
 };
 
