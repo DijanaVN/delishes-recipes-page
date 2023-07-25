@@ -22,13 +22,14 @@ import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 
 // import useBookmarkedRecipes, { Props } from "../hooks/useBookmarkedRecipes";
 // import IconButtonBookmark from "./iconButton";
+import { useContext } from "react";
+import newRecipeContext from "./../state-management/newRecipeContext";
+import selectedRecipeContext from "../state-management/selectedRecipeContext";
 
-export interface Props {
-  selectedRecipe: Recipe | null;
-  newRecipe?: Recipe | null;
-  onB?: (bookmarkedRecipes: Recipe[]) => void;
-}
-const RecipeCard = ({ selectedRecipe, newRecipe, onB }: Props) => {
+const RecipeCard = () => {
+  const { newRecipe } = useContext(newRecipeContext);
+  const { selectedRecipe } = useContext(selectedRecipeContext);
+
   const { colorMode, toggleColorMode } = useColorMode();
 
   // const { isLoading } = useRecipes("");

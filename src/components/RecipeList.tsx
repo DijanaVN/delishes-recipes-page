@@ -11,24 +11,25 @@ import {
 } from "@chakra-ui/react";
 import useRecipes, { Recipe } from "../hooks/useRecipes";
 import "./../App.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import React from "react";
+import newRecipeContext from "./../state-management/newRecipeContext";
+import searchTextContext from "./../state-management/searchTextContext";
+import selectedRecipeContext from "../state-management/selectedRecipeContext";
 
-interface Props {
-  onSelectRecipe: (recipe: Recipe) => void;
-  searchText: string;
-  newRecipe?: Recipe | null;
-}
+const RecipesList = () => {
+  const { searchText } = useContext(searchTextContext);
+  const { newRecipe } = useContext(newRecipeContext);
+  const { setSelectedRecipe } = useContext(selectedRecipeContext);
+  console.log(newRecipe);
 
-const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
-  const { searchQuery } = useRecipes(
-    searchText,
-    newRecipe as unknown as Recipe[]
-  );
+  const { searchQuery, totalRecipes } = useRecipes(searchText || "");
 
   console.log(searchQuery);
 
   const { colorMode, toggleColorMode } = useColorMode();
+
+  const shouldShowLoadMore = totalRecipes > 19;
 
   console.log(searchQuery.data);
   const [hoveredRecipe, setHoveredRecipe] = useState<string | null>(null);
@@ -38,6 +39,7 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
   const handleMouseLeave = () => {
     setHoveredRecipe(null);
   };
+
   return (
     <Box>
       {/* {searchQuery.error && (
@@ -60,16 +62,20 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
           <React.Fragment key={uri}>
             {page.map((recipe) => (
               <ListItem
-                key={recipe.recipe.uri}
-                onMouseEnter={() => handleMouseEnter(recipe.recipe.uri)}
+                key={recipe?.recipe.uri}
+                onMouseEnter={() => handleMouseEnter(recipe?.recipe.uri)}
                 onMouseLeave={handleMouseLeave}
-                className={hoveredRecipe === recipe.recipe.uri ? "hovered" : ""}
+                className={
+                  hoveredRecipe === recipe?.recipe.uri ? "hovered" : ""
+                }
               >
                 <Flex padding={1}>
                   <Button
                     padding={8}
                     onClick={() => {
-                      onSelectRecipe(recipe);
+                      if (recipe) {
+                        setSelectedRecipe(recipe);
+                      }
                     }}
                     variant={"solid"}
                     display="flex"
@@ -89,8 +95,8 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
                       <Image
                         boxSize="100%"
                         objectFit="cover"
-                        src={recipe.recipe.image}
-                        alt={recipe.recipe.label}
+                        src={recipe?.recipe.image}
+                        alt={recipe?.recipe.label}
                       />
                     </Box>
                     <Box
@@ -99,16 +105,16 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
                       fontSize={{ base: "xs", md: "md", lg: "lg" }}
                     >
                       <Text>
-                        {recipe.recipe.label.length > 25
-                          ? recipe.recipe.label.slice(0, 25).concat("...")
-                          : recipe.recipe.label}
+                        {recipe?.recipe.label.length > 25
+                          ? recipe?.recipe.label.slice(0, 25).concat("...")
+                          : recipe?.recipe.label}
                       </Text>
                       <Text
                         color={colorMode === "dark" ? "primary" : "bluecolor"}
                         fontFamily={"Parisienne-Regular"}
                         align={"left"}
                       >
-                        {recipe.recipe.cuisineType}
+                        {recipe?.recipe.cuisineType}
                       </Text>
                     </Box>
                   </Button>
@@ -122,11 +128,11 @@ const RecipesList = ({ onSelectRecipe, searchText, newRecipe }: Props) => {
         ))} */}
       </List>{" "}
       <Flex padding={1} justifyContent="flex-end">
-        {
+        {shouldShowLoadMore && (
           <Button onClick={() => searchQuery.fetchNextPage()}>
             {searchQuery.isFetchingNextPage ? "Loading..." : "Load More"}
           </Button>
-        }
+        )}
       </Flex>
     </Box>
   );

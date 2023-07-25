@@ -7,7 +7,7 @@ import "./index.css";
 import App from "./App";
 import theme from "./theme";
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: { staleTime: 10 * 100 },
   },

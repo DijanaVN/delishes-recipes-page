@@ -12,6 +12,8 @@ import { BsSearch } from "react-icons/bs";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useContext } from "react";
+import searchTextContext from "../state-management/searchTextContext";
 
 const schema = z.object({
   searchText: z
@@ -19,15 +21,12 @@ const schema = z.object({
     .min(3, { message: "Search input must be at least 3 characters." }),
 });
 
-interface Props {
-  onSearch: (searchText: string) => void;
-}
-
 interface FormData {
   searchText: string;
 }
 
-const SearchInput = ({ onSearch }: Props) => {
+const SearchInput = () => {
+  const { setSearchText } = useContext(searchTextContext);
   const {
     register,
     handleSubmit,
@@ -36,7 +35,7 @@ const SearchInput = ({ onSearch }: Props) => {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   const onSubmit = (data: FieldValues) => {
-    onSearch(data.searchText);
+    setSearchText(data.searchText);
     reset();
   };
 

@@ -22,8 +22,9 @@ import ownrecipe from "../../images-logos/yourownrecipeslg.webp";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldValues, useForm } from "react-hook-form";
-import { ingrediantObjectFunction } from "./ingrediantFunction";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import newRecipeContext from "../state-management/newRecipeContext";
 
 const ingredientSchema = z.array(z.string());
 
@@ -49,13 +50,11 @@ const recipeSchema = z.object({
     .min(3, { message: "Dish Type needs to be at least 3 characters." }),
 });
 
-interface Props {
-  onRecipeUpload: (recipeData: Recipe) => void;
-}
-
 type FormData = z.infer<typeof recipeSchema>;
 
-const AddRecipeModal = ({ onRecipeUpload }: Props) => {
+const AddRecipeModal = () => {
+  const { newRecipe, setNewRecipe } = useContext(newRecipeContext);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isUploaded, setIsUploaded] = useState(false);
   const {
@@ -89,6 +88,21 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
   });
 
   console.log(errors);
+  const ingrediantObjectFunction = (data: FieldValues) => {
+    const ingredientsObject = {
+      text: data.recipe.ingredients[0],
+      quantity: Number(data.recipe.ingredients[1]),
+      measure: data.recipe.ingredients[2],
+    };
+    const updatedData = {
+      ...data,
+      recipe: {
+        ...data.recipe,
+        ingredients: [ingredientsObject],
+      },
+    };
+    return updatedData;
+  };
 
   const ingredientsValue = watch("recipe.ingredients");
 
@@ -107,8 +121,8 @@ const AddRecipeModal = ({ onRecipeUpload }: Props) => {
   };
 
   const onSubmit = (data: FieldValues) => {
-    onRecipeUpload(ingrediantObjectFunction(data));
-    console.log(ingrediantObjectFunction(data));
+    setNewRecipe(ingrediantObjectFunction(data));
+
     setIsUploaded(true);
     openSuccessModal();
     onClose();
