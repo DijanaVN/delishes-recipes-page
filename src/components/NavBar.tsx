@@ -2,8 +2,8 @@ import { Box, HStack, Image, useColorMode } from "@chakra-ui/react";
 import logo from "../../images-logos/logozoomed.webp";
 import ColorModeSwitch from "./ColorModeSwitch";
 import SearchInput from "./SearchInput";
-import AddRecipeModal from "./AddRecipeModal";
-import BookmarkedRecipes from "./BookmarkedList";
+import AddRecipeModal from "./AddRecipeModalForm";
+import BookmarkedList from "./BookmarkedList";
 
 const NavBar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -36,7 +36,7 @@ const NavBar = () => {
           <SearchInput />
         </Box>
         <AddRecipeModal />
-        <BookmarkedRecipes />
+        <BookmarkedList />
         <ColorModeSwitch />
       </HStack>
     </>

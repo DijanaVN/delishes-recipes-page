@@ -13,25 +13,19 @@ import useRecipes, { Recipe } from "../hooks/useRecipes";
 import "./../App.css";
 import { useContext, useState } from "react";
 import React from "react";
-import newRecipeContext from "./../state-management/newRecipeContext";
 import searchTextContext from "./../state-management/searchTextContext";
 import selectedRecipeContext from "../state-management/selectedRecipeContext";
 
 const RecipesList = () => {
   const { searchText } = useContext(searchTextContext);
-  const { newRecipe } = useContext(newRecipeContext);
   const { setSelectedRecipe } = useContext(selectedRecipeContext);
-  console.log(newRecipe);
 
-  const { searchQuery, totalRecipes } = useRecipes(searchText || "");
+  const { searchQuery, combinedRecipes } = useRecipes(searchText || "");
 
-  console.log(searchQuery);
+  const { colorMode } = useColorMode();
 
-  const { colorMode, toggleColorMode } = useColorMode();
+  const shouldShowLoadMore = combinedRecipes.length > 19;
 
-  const shouldShowLoadMore = totalRecipes > 19;
-
-  console.log(searchQuery.data);
   const [hoveredRecipe, setHoveredRecipe] = useState<string | null>(null);
   const handleMouseEnter = (uri: string) => {
     setHoveredRecipe(uri);
@@ -39,7 +33,7 @@ const RecipesList = () => {
   const handleMouseLeave = () => {
     setHoveredRecipe(null);
   };
-
+  console.log(combinedRecipes);
   return (
     <Box>
       {/* {searchQuery.error && (

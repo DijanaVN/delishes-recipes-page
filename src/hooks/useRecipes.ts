@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import apiClient from "../services/api-client";
 import { useContext } from "react";
 import newRecipeContext from "../state-management/newRecipeContext";
@@ -47,6 +47,7 @@ export interface FetchRecipesResponse {
 
 const useRecipes = (searchText: string) => {
   const { newRecipe } = useContext(newRecipeContext);
+
   const query = {
     pageSize: 10,
   };
@@ -70,16 +71,12 @@ const useRecipes = (searchText: string) => {
     ? [newRecipe, ...(searchQuery.data?.pages ?? []).flat()]
     : searchQuery.data?.pages?.flat() || [];
 
-  const totalRecipes = newRecipe
-    ? combinedRecipes.length
-    : searchQuery.data?.pages?.flat()?.length || 0;
-
   return {
     searchQuery: {
       ...searchQuery,
       data: { ...searchQuery.data, pages: [combinedRecipes] },
     },
-    totalRecipes,
+    combinedRecipes,
   };
 };
 

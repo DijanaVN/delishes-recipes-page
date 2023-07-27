@@ -1,77 +1,25 @@
-// import React, { useEffect, useState } from "react";
-// import { Box, Text, Heading } from "@chakra-ui/react";
-// import { Recipe } from "../hooks/useRecipes";
-// import useBookmarkedRecipes from "../hooks/useBookmarkedRecipes";
-
-// interface Props {
-//   selectedRecipe: Recipe | null;
-//   onB: (bookmarkedRecipes: Recipe[]) => void;
-// }
-
-// const BookmarkedList = ({ selectedRecipe, onB }: Props) => {
-//   const [updatedBookmarked, setUpdatedBookmarked] = useState<Recipe[]>([]);
-
-//   useEffect(() => {
-//     if (selectedRecipe) {
-//       setUpdatedBookmarked((prevRecipes) => [...prevRecipes, selectedRecipe]);
-//       onB(updatedBookmarked); // Call onB with the updated bookmarked recipes
-//     }
-//   }, [selectedRecipe]);
-
-//   console.log(updatedBookmarked);
-//   console.log(selectedRecipe);
-
-//   return (
-//     <Box>
-//       <Heading size="md">Bookmarked Recipes</Heading>
-//       {updatedBookmarked.length === 0 ? (
-//         <Text>No bookmarked recipes yet.</Text>
-//       ) : (
-//         <ul>
-//           {updatedBookmarked.map((recipe) => (
-//             <li key={recipe.recipe.uri}>{recipe.recipe.label}</li>
-//           ))}
-//         </ul>
-//       )}
-//     </Box>
-//   );
-// };
-
-// export default BookmarkedList;
-
-// import { Box, Text, Heading } from "@chakra-ui/react";
-// import useBookmarkedRecipes from "../hooks/useBookmarkedRecipes";
-// import { Props } from "../hooks/useBookmarkedRecipes";
-
-// const BookmarkedList = ({ selectedRecipe }: Props) => {
-//   const { isBookmarkedValue } = useBookmarkedRecipes({ selectedRecipe });
-//   console.log(selectedRecipe);
-//   console.log(isBookmarkedValue);
-
-//   return (
-//     <Box>
-//       <Heading size="md">Bookmarked Recipes</Heading>
-//       {isBookmarkedValue.length === 0 ? (
-//         <Text>No bookmarked recipes yet.</Text>
-//       ) : (
-//         <ul>
-//           {isBookmarkedValue.map((recipe) => (
-//             <li key={recipe.recipe.uri}>{recipe.recipe.label}</li>
-//           ))}
-//         </ul>
-//       )}
-//     </Box>
-//   );
-// };
-
-// export default BookmarkedList;
-
+import { useContext } from "react";
+import { Text } from "@chakra-ui/react";
+import selectedRecipeContext from "../state-management/selectedRecipeContext";
 import { Flex, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 import { FaRegBookmark } from "react-icons/fa";
+import { useBookmarkedRecipes } from "../state-management/bookmarkedRecipesContext";
+import useRecipes from "../hooks/useRecipes";
+import searchTextContext from "../state-management/searchTextContext";
 
-const BookmarkedRecipes = () => {
+const BookmarkedList = () => {
+  const { selectedRecipe } = useContext(selectedRecipeContext);
+  const { bookmarkedRecipes, addBookmark, removeBookmark } =
+    useBookmarkedRecipes();
+  const { searchText } = useContext(searchTextContext);
+  const { combinedRecipes } = useRecipes(searchText);
+
+  console.log(bookmarkedRecipes);
+  console.log(combinedRecipes);
+  console.log(selectedRecipe);
+
   return (
     <Flex>
       <Menu>
@@ -86,14 +34,19 @@ const BookmarkedRecipes = () => {
         >
           Bookmarks
         </MenuButton>
-        <MenuList>
-          <MenuItem>recipe 1</MenuItem>
-          <MenuItem>recipe 2</MenuItem>
-          <MenuItem>recipe 3</MenuItem>
-        </MenuList>
+
+        {bookmarkedRecipes.length === 0 ? (
+          <Text>No bookmarked recipes yet.</Text>
+        ) : (
+          <MenuList padding={1}>
+            {bookmarkedRecipes.map((recipe) => (
+              <MenuItem key={recipe.recipe.uri}>{recipe.recipe.label}</MenuItem>
+            ))}
+          </MenuList>
+        )}
       </Menu>
     </Flex>
   );
 };
 
-export default BookmarkedRecipes;
+export default BookmarkedList;

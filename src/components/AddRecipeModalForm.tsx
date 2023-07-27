@@ -12,18 +12,15 @@ import {
   Input,
   useDisclosure,
   Text,
-  HStack,
   VStack,
 } from "@chakra-ui/react";
 import { BsPencilSquare } from "react-icons/bs";
 import { MdUpload } from "react-icons/md";
-import { Recipe } from "../hooks/useRecipes";
 import ownrecipe from "../../images-logos/yourownrecipeslg.webp";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldValues, useForm } from "react-hook-form";
 import { useContext, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
 import newRecipeContext from "../state-management/newRecipeContext";
 
 const ingredientSchema = z.array(z.string());
@@ -53,7 +50,7 @@ const recipeSchema = z.object({
 type FormData = z.infer<typeof recipeSchema>;
 
 const AddRecipeModal = () => {
-  const { newRecipe, setNewRecipe } = useContext(newRecipeContext);
+  const { setNewRecipe } = useContext(newRecipeContext);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isUploaded, setIsUploaded] = useState(false);
@@ -87,7 +84,6 @@ const AddRecipeModal = () => {
     },
   });
 
-  console.log(errors);
   const ingrediantObjectFunction = (data: FieldValues) => {
     const ingredientsObject = {
       text: data.recipe.ingredients[0],
@@ -137,7 +133,7 @@ const AddRecipeModal = () => {
   return (
     <>
       <Button rounded="full" onClick={onOpen}>
-        <BsPencilSquare fontSize="200%" />
+        <BsPencilSquare fontSize="300%" />
         <Text paddingLeft={2}>Add Recipe</Text>
       </Button>
       <Modal

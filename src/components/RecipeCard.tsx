@@ -11,25 +11,45 @@ import {
   Image,
   useColorMode,
   Grid,
-  IconButton,
   HStack,
-  Center,
 } from "@chakra-ui/react";
-import useRecipes, { Recipe } from "../hooks/useRecipes";
 import recipe from "../../images-logos/image-recipe.webp";
 import noimage from "../../images-logos/no-thumbnail-image-placeholder.webp";
-import { FaBookmark, FaRegBookmark } from "react-icons/fa";
-
-// import useBookmarkedRecipes, { Props } from "../hooks/useBookmarkedRecipes";
-// import IconButtonBookmark from "./iconButton";
 import { useContext } from "react";
 import newRecipeContext from "./../state-management/newRecipeContext";
 import selectedRecipeContext from "../state-management/selectedRecipeContext";
 
+import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
+import searchTextContext from "../state-management/searchTextContext";
+import useRecipes from "../hooks/useRecipes";
+import { useBookmarkedRecipes } from "../state-management/bookmarkedRecipesContext";
+
 const RecipeCard = () => {
   const { newRecipe } = useContext(newRecipeContext);
   const { selectedRecipe } = useContext(selectedRecipeContext);
+  const { searchText } = useContext(searchTextContext);
+  const { combinedRecipes } = useRecipes(searchText);
+  const { bookmarkedRecipes, addBookmark, removeBookmark, isBookmarked } =
+    useBookmarkedRecipes();
+  console.log(bookmarkedRecipes);
+  console.log(combinedRecipes);
+  console.log(isBookmarked);
 
+  const isRecipeBookmarked =
+    selectedRecipe &&
+    bookmarkedRecipes.some((r) => r.recipe.uri === selectedRecipe.recipe.uri);
+
+  const handleBookmark = () => {
+    if (selectedRecipe) {
+      if (isRecipeBookmarked) {
+        // Remove bookmark
+        removeBookmark(selectedRecipe.recipe.uri);
+      } else {
+        // Add bookmark
+        addBookmark(selectedRecipe.recipe.uri, combinedRecipes);
+      }
+    }
+  };
   const { colorMode, toggleColorMode } = useColorMode();
 
   // const { isLoading } = useRecipes("");
@@ -88,7 +108,18 @@ const RecipeCard = () => {
                   ? selectedRecipe.recipe.label
                   : "Please search and select a recipe."}
               </Heading>
-              {/* {selectedRecipe && <IconButtonBookmark />} */}
+
+              <Button
+                variant={"ghost"}
+                onClick={handleBookmark}
+                css={{ outline: "none" }}
+              >
+                {isRecipeBookmarked ? (
+                  <BsBookmarkFill fontSize="100%" />
+                ) : (
+                  <BsBookmark fontSize="100%" />
+                )}
+              </Button>
             </HStack>
             <Divider />
             <Text padding={2} textAlign={"center"} fontWeight={"bold"}>
