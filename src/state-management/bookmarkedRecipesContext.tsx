@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useContext, useState } from "react";
 import { Recipe } from "../hooks/useRecipes";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 type bookmarkedRecipesContext = {
   bookmarkedRecipes: Recipe[];
@@ -30,7 +31,10 @@ export function useBookmarkedRecipes() {
 export function BookmarkedRecipesProvider({
   children,
 }: bookmarkedProviderProps) {
-  const [bookmarkedRecipes, setBookmarkedRecipes] = useState<Recipe[]>([]);
+  const [bookmarkedRecipes, setBookmarkedRecipes] = useLocalStorage<Recipe[]>(
+    "RecipesStorage",
+    []
+  );
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   function addBookmark(uri: string, combinedRecipes: Recipe[]) {

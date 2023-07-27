@@ -1,6 +1,4 @@
-import { useContext } from "react";
-import { Text } from "@chakra-ui/react";
-import selectedRecipeContext from "../state-management/selectedRecipeContext";
+import { useContext, useState } from "react";
 import { Flex, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
@@ -10,15 +8,19 @@ import useRecipes from "../hooks/useRecipes";
 import searchTextContext from "../state-management/searchTextContext";
 
 const BookmarkedList = () => {
-  const { selectedRecipe } = useContext(selectedRecipeContext);
   const { bookmarkedRecipes, addBookmark, removeBookmark } =
     useBookmarkedRecipes();
   const { searchText } = useContext(searchTextContext);
   const { combinedRecipes } = useRecipes(searchText);
+  const [showNoBookmarkMessage, setShowNoBookmarkMessage] = useState(false);
 
-  console.log(bookmarkedRecipes);
-  console.log(combinedRecipes);
-  console.log(selectedRecipe);
+  // const handle = () => {
+  //   bookmarkedRecipes.length === 0 && console.log("No bookmarked recipes yet.");
+  // };
+
+  const handle = () => {
+    setShowNoBookmarkMessage(bookmarkedRecipes.length === 0);
+  };
 
   return (
     <Flex>
@@ -26,6 +28,7 @@ const BookmarkedList = () => {
         <MenuButton
           rounded="full"
           as={Button}
+          onClick={handle}
           rightIcon={<BsChevronDown />}
           leftIcon={<FaRegBookmark />}
           variant="solid"
@@ -34,16 +37,17 @@ const BookmarkedList = () => {
         >
           Bookmarks
         </MenuButton>
-
-        {bookmarkedRecipes.length === 0 ? (
-          <Text>No bookmarked recipes yet.</Text>
-        ) : (
-          <MenuList padding={1}>
-            {bookmarkedRecipes.map((recipe) => (
+        <MenuList padding={1}>
+          {bookmarkedRecipes.length > 0 ? (
+            bookmarkedRecipes.map((recipe) => (
               <MenuItem key={recipe.recipe.uri}>{recipe.recipe.label}</MenuItem>
-            ))}
-          </MenuList>
-        )}
+            ))
+          ) : (
+            <MenuItem>
+              {showNoBookmarkMessage ? "No bookmarked recipes yet." : ""}
+            </MenuItem>
+          )}
+        </MenuList>
       </Menu>
     </Flex>
   );
