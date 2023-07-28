@@ -6,8 +6,9 @@ interface selectetRecipeContext {
   setSelectedRecipe: React.Dispatch<React.SetStateAction<Recipe | null>>;
 }
 
-const newRecipeContext = React.createContext<selectetRecipeContext>(
-  {} as selectetRecipeContext
-);
+const SelectedContext = React.createContext<selectetRecipeContext>({
+  selectedRecipe: null,
+  setSelectedRecipe: () => {},
+});
 
-export default newRecipeContext;
+export default SelectedContext;

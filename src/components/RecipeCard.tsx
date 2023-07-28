@@ -9,14 +9,13 @@ import {
   Button,
   Flex,
   Image,
-  useColorMode,
   Grid,
   HStack,
 } from "@chakra-ui/react";
 import recipe from "../../images-logos/image-recipe.webp";
 import noimage from "../../images-logos/no-thumbnail-image-placeholder.webp";
 import { useContext } from "react";
-import newRecipeContext from "./../state-management/newRecipeContext";
+import { useNewRecipes } from "./../state-management/newRecipeContext";
 import selectedRecipeContext from "../state-management/selectedRecipeContext";
 
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
@@ -25,7 +24,7 @@ import useRecipes from "../hooks/useRecipes";
 import { useBookmarkedRecipes } from "../state-management/bookmarkedRecipesContext";
 
 const RecipeCard = () => {
-  const { newRecipe } = useContext(newRecipeContext);
+  const { newRecipes } = useNewRecipes();
   const { selectedRecipe } = useContext(selectedRecipeContext);
   const { searchText } = useContext(searchTextContext);
   const { combinedRecipes } = useRecipes(searchText);
@@ -42,17 +41,12 @@ const RecipeCard = () => {
   const handleBookmark = () => {
     if (selectedRecipe) {
       if (isRecipeBookmarked) {
-        // Remove bookmark
         removeBookmark(selectedRecipe.recipe.uri);
       } else {
-        // Add bookmark
         addBookmark(selectedRecipe.recipe.uri, combinedRecipes);
       }
     }
   };
-  const { colorMode, toggleColorMode } = useColorMode();
-
-  // const { isLoading } = useRecipes("");
 
   const image = () => {
     if (selectedRecipe?.recipe.images?.LARGE?.url) {
@@ -64,33 +58,17 @@ const RecipeCard = () => {
     }
   };
 
-  // console.log(isBookmarked);
+  const isRecipeInNewRecipes =
+    selectedRecipe &&
+    newRecipes.some(
+      (recipe) => recipe.recipe.uri === selectedRecipe.recipe.uri
+    );
 
   return (
     <>
-      {/* {isLoading && (
-        <Center minHeight="100vh">
-          <Button
-            isLoading
-            colorScheme="teal"
-            variant="unstyled"
-            loadingText="Loading..."
-          />
-        </Center>
-      )} */}
       <Card>
         <CardBody>
           <Flex justifyContent="center" alignItems="center">
-            {/* {isLoading && (
-              <Center minHeight="100vh">
-                <Button
-                  isLoading
-                  colorScheme="teal"
-                  variant="unstyled"
-                  loadingText="Loading..."
-                />
-              </Center>
-            )} */}
             <Image
               objectFit={"cover"}
               height={"60vh"}
@@ -108,18 +86,19 @@ const RecipeCard = () => {
                   ? selectedRecipe.recipe.label
                   : "Please search and select a recipe."}
               </Heading>
-
-              <Button
-                variant={"ghost"}
-                onClick={handleBookmark}
-                css={{ outline: "none" }}
-              >
-                {isRecipeBookmarked ? (
-                  <BsBookmarkFill fontSize="100%" />
-                ) : (
-                  <BsBookmark fontSize="100%" />
-                )}
-              </Button>
+              {selectedRecipe && (
+                <Button
+                  variant={"ghost"}
+                  onClick={handleBookmark}
+                  css={{ outline: "none" }}
+                >
+                  {isRecipeBookmarked ? (
+                    <BsBookmarkFill fontSize="100%" />
+                  ) : (
+                    <BsBookmark fontSize="100%" />
+                  )}
+                </Button>
+              )}
             </HStack>
             <Divider />
             <Text padding={2} textAlign={"center"} fontWeight={"bold"}>
@@ -171,7 +150,7 @@ const RecipeCard = () => {
           </Stack>
         </CardBody>
         <Divider />
-        {selectedRecipe !== newRecipe && (
+        {selectedRecipe && !isRecipeInNewRecipes && (
           <CardFooter justifyContent="center" textAlign="center">
             <Flex flexDirection={"column"} align={"center"}>
               <Text>

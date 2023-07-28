@@ -20,8 +20,9 @@ import ownrecipe from "../../images-logos/yourownrecipeslg.webp";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldValues, useForm } from "react-hook-form";
-import { useContext, useState } from "react";
-import newRecipeContext from "../state-management/newRecipeContext";
+import { useState } from "react";
+import { useNewRecipes } from "../state-management/newRecipeContext";
+import { Recipe } from "../hooks/useRecipes";
 
 const ingredientSchema = z.array(z.string());
 
@@ -50,7 +51,7 @@ const recipeSchema = z.object({
 type FormData = z.infer<typeof recipeSchema>;
 
 const AddRecipeModal = () => {
-  const { setNewRecipe } = useContext(newRecipeContext);
+  const { setNewRecipes } = useNewRecipes();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isUploaded, setIsUploaded] = useState(false);
@@ -84,7 +85,7 @@ const AddRecipeModal = () => {
     },
   });
 
-  const ingrediantObjectFunction = (data: FieldValues) => {
+  const ingrediantObjectFunction = (data: FieldValues): Recipe => {
     const ingredientsObject = {
       text: data.recipe.ingredients[0],
       quantity: Number(data.recipe.ingredients[1]),
@@ -117,7 +118,8 @@ const AddRecipeModal = () => {
   };
 
   const onSubmit = (data: FieldValues) => {
-    setNewRecipe(ingrediantObjectFunction(data));
+    const newRecipe = ingrediantObjectFunction(data);
+    setNewRecipes((prevRecipes) => [...prevRecipes, newRecipe]);
 
     setIsUploaded(true);
     openSuccessModal();

@@ -5,7 +5,7 @@ import RecipeCard from "./components/RecipeCard";
 import RecipesList from "./components/RecipeList";
 import { useState } from "react";
 import { Recipe } from "./hooks/useRecipes";
-import newRecipeContext from "./state-management/newRecipeContext";
+import { NewRecipesProvider } from "./state-management/newRecipeContext";
 import searchTextContext from "./state-management/searchTextContext";
 import selectedRecipeContext from "./state-management/selectedRecipeContext";
 import { BookmarkedRecipesProvider } from "./state-management/bookmarkedRecipesContext";
@@ -13,7 +13,6 @@ import { BookmarkedRecipesProvider } from "./state-management/bookmarkedRecipesC
 function App() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [searchText, setSearchText] = useState("");
-  const [newRecipe, setNewRecipe] = useState<Recipe | null>(null);
 
   return (
     <>
@@ -22,7 +21,7 @@ function App() {
           value={{ selectedRecipe, setSelectedRecipe }}
         >
           <searchTextContext.Provider value={{ searchText, setSearchText }}>
-            <newRecipeContext.Provider value={{ newRecipe, setNewRecipe }}>
+            <NewRecipesProvider>
               <Grid
                 templateAreas={`'nav nav' 'aside main ' 'footer footer'`}
                 templateColumns={"30% 70%"}
@@ -38,7 +37,7 @@ function App() {
                   <RecipeCard />
                 </GridItem>
               </Grid>
-            </newRecipeContext.Provider>
+            </NewRecipesProvider>
           </searchTextContext.Provider>
         </selectedRecipeContext.Provider>
       </BookmarkedRecipesProvider>
