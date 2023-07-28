@@ -13,12 +13,12 @@ import { Button } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 import { FaRegBookmark } from "react-icons/fa";
 import { useBookmarkedRecipes } from "../state-management/bookmarkedRecipesContext";
-import SelectedContext from "./../state-management/selectedRecipeContext";
+import { useSelectedRecipe } from "./../state-management/selectedRecipeContext";
 
 const BookmarkedList = () => {
   const { bookmarkedRecipes } = useBookmarkedRecipes();
   const [showNoBookmarkMessage, setShowNoBookmarkMessage] = useState(false);
-  const { setSelectedRecipe } = useContext(SelectedContext);
+  const { setSelectedRecipe } = useSelectedRecipe();
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(bookmarkedRecipes.length / 5);
   const startIndex = (currentPage - 1) * 5;

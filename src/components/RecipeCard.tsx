@@ -14,19 +14,17 @@ import {
 } from "@chakra-ui/react";
 import recipe from "../../images-logos/image-recipe.webp";
 import noimage from "../../images-logos/no-thumbnail-image-placeholder.webp";
-import { useContext } from "react";
 import { useNewRecipes } from "./../state-management/newRecipeContext";
-import selectedRecipeContext from "../state-management/selectedRecipeContext";
-
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
-import searchTextContext from "../state-management/searchTextContext";
 import useRecipes from "../hooks/useRecipes";
 import { useBookmarkedRecipes } from "../state-management/bookmarkedRecipesContext";
+import { useSearchText } from "../state-management/searchTextContext";
+import { useSelectedRecipe } from "../state-management/selectedRecipeContext";
 
 const RecipeCard = () => {
-  const { newRecipes } = useNewRecipes();
-  const { selectedRecipe } = useContext(selectedRecipeContext);
-  const { searchText } = useContext(searchTextContext);
+  const { newRecipes, removeRecipe } = useNewRecipes();
+  const { selectedRecipe } = useSelectedRecipe();
+  const { searchText } = useSearchText();
   const { combinedRecipes } = useRecipes(searchText);
   const { bookmarkedRecipes, addBookmark, removeBookmark, isBookmarked } =
     useBookmarkedRecipes();
@@ -64,6 +62,10 @@ const RecipeCard = () => {
       (recipe) => recipe.recipe.uri === selectedRecipe.recipe.uri
     );
 
+  const handleDeleteRecipe = (recipeUri: string) => {
+    removeRecipe(recipeUri);
+  };
+
   return (
     <>
       <Card>
@@ -80,25 +82,48 @@ const RecipeCard = () => {
           </Flex>
 
           <Stack mt="6" spacing="3">
-            <HStack spacing={10} justifyContent={"center"}>
-              <Heading textAlign="center" size="md">
-                {selectedRecipe
-                  ? selectedRecipe.recipe.label
-                  : "Please search and select a recipe."}
-              </Heading>
-              {selectedRecipe && (
-                <Button
-                  variant={"ghost"}
-                  onClick={handleBookmark}
-                  css={{ outline: "none" }}
-                >
-                  {isRecipeBookmarked ? (
-                    <BsBookmarkFill fontSize="100%" />
-                  ) : (
-                    <BsBookmark fontSize="100%" />
+            <HStack
+              spacing={10}
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <HStack justifyContent="center" flex="1">
+                <Heading fontWeight="bold" size="lg">
+                  {selectedRecipe
+                    ? selectedRecipe.recipe.label
+                    : "Please search and select a recipe."}
+                </Heading>
+              </HStack>
+              <HStack>
+                {selectedRecipe && (
+                  <Button
+                    variant="ghost"
+                    onClick={handleBookmark}
+                    css={{ outline: "none" }}
+                  >
+                    {isRecipeBookmarked ? (
+                      <BsBookmarkFill fontSize="100%" />
+                    ) : (
+                      <BsBookmark fontSize="100%" />
+                    )}
+                  </Button>
+                )}
+                {selectedRecipe &&
+                  newRecipes.some(
+                    (recipe) => recipe.recipe.uri === selectedRecipe.recipe.uri
+                  ) && (
+                    <Button
+                      variant="outline"
+                      colorScheme="gray" // Change color to your preference
+                      size="sm" // Change size to your preferences
+                      onClick={() =>
+                        handleDeleteRecipe(selectedRecipe.recipe.uri)
+                      }
+                    >
+                      Delete
+                    </Button>
                   )}
-                </Button>
-              )}
+              </HStack>
             </HStack>
             <Divider />
             <Text padding={2} textAlign={"center"} fontWeight={"bold"}>

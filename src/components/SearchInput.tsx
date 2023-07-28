@@ -13,7 +13,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext } from "react";
-import searchTextContext from "../state-management/searchTextContext";
+import { useSearchText } from "../state-management/searchTextContext";
 
 const schema = z.object({
   searchText: z
@@ -26,7 +26,7 @@ interface FormData {
 }
 
 const SearchInput = () => {
-  const { setSearchText } = useContext(searchTextContext);
+  const { setSearchText } = useSearchText();
   const {
     register,
     handleSubmit,

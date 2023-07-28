@@ -13,12 +13,12 @@ import useRecipes, { Recipe } from "../hooks/useRecipes";
 import "./../App.css";
 import { useContext, useState } from "react";
 import React from "react";
-import searchTextContext from "./../state-management/searchTextContext";
-import selectedRecipeContext from "../state-management/selectedRecipeContext";
+import { useSearchText } from "./../state-management/searchTextContext";
+import { useSelectedRecipe } from "./../state-management/selectedRecipeContext";
 
 const RecipesList = () => {
-  const { searchText } = useContext(searchTextContext);
-  const { setSelectedRecipe } = useContext(selectedRecipeContext);
+  const { searchText } = useSearchText();
+  const { setSelectedRecipe } = useSelectedRecipe();
 
   const { searchQuery, combinedRecipes } = useRecipes(searchText || "");
 

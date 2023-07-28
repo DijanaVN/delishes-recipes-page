@@ -5,6 +5,7 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 type NewRecipesContext = {
   newRecipes: Recipe[];
   setNewRecipes: React.Dispatch<React.SetStateAction<Recipe[]>>;
+  removeRecipe: (uri: string) => void;
 };
 
 type NewProviderProps = {
@@ -14,6 +15,7 @@ type NewProviderProps = {
 const NewRecipesContext = createContext<NewRecipesContext>({
   newRecipes: [],
   setNewRecipes: () => {},
+  removeRecipe: () => {},
 });
 
 export function useNewRecipes() {
@@ -26,11 +28,18 @@ export function NewRecipesProvider({ children }: NewProviderProps) {
     []
   );
 
+  const removeRecipe = (uri: string) => {
+    setNewRecipes((prevRecipes) =>
+      prevRecipes.filter((recipe) => recipe.recipe.uri !== uri)
+    );
+  };
+
   return (
     <NewRecipesContext.Provider
       value={{
         newRecipes,
         setNewRecipes,
+        removeRecipe,
       }}
     >
       {children}
