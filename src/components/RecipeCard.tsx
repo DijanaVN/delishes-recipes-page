@@ -31,6 +31,7 @@ const RecipeCard = () => {
   console.log(bookmarkedRecipes);
   console.log(combinedRecipes);
   console.log(isBookmarked);
+  const noRecipesSelected = !selectedRecipe;
 
   const isRecipeBookmarked =
     selectedRecipe &&
@@ -73,7 +74,7 @@ const RecipeCard = () => {
           <Flex justifyContent="center" alignItems="center">
             <Image
               objectFit={"cover"}
-              height={"60vh"}
+              height={"75vh"}
               width={"100%"}
               src={selectedRecipe ? image() : recipe}
               alt={selectedRecipe?.recipe.label}
@@ -94,84 +95,101 @@ const RecipeCard = () => {
                     : "Please search and select a recipe."}
                 </Heading>
               </HStack>
-              <HStack>
-                {selectedRecipe && (
-                  <Button
-                    variant="ghost"
-                    onClick={handleBookmark}
-                    css={{ outline: "none" }}
-                  >
-                    {isRecipeBookmarked ? (
-                      <BsBookmarkFill fontSize="100%" />
-                    ) : (
-                      <BsBookmark fontSize="100%" />
-                    )}
-                  </Button>
-                )}
-                {selectedRecipe &&
-                  newRecipes.some(
-                    (recipe) => recipe.recipe.uri === selectedRecipe.recipe.uri
-                  ) && (
+              {selectedRecipe ? (
+                <HStack>
+                  {selectedRecipe && (
                     <Button
-                      variant="outline"
-                      colorScheme="gray" // Change color to your preference
-                      size="sm" // Change size to your preferences
-                      onClick={() =>
-                        handleDeleteRecipe(selectedRecipe.recipe.uri)
-                      }
+                      variant="ghost"
+                      onClick={handleBookmark}
+                      css={{ outline: "none" }}
                     >
-                      Delete
+                      {isRecipeBookmarked ? (
+                        <BsBookmarkFill fontSize="100%" />
+                      ) : (
+                        <BsBookmark fontSize="100%" />
+                      )}
                     </Button>
                   )}
-              </HStack>
+                  {selectedRecipe &&
+                    newRecipes.some(
+                      (recipe) =>
+                        recipe.recipe.uri === selectedRecipe.recipe.uri
+                    ) && (
+                      <Button
+                        variant="outline"
+                        colorScheme="gray" // Change color to your preference
+                        size="sm" // Change size to your preferences
+                        onClick={() =>
+                          handleDeleteRecipe(selectedRecipe.recipe.uri)
+                        }
+                      >
+                        Delete
+                      </Button>
+                    )}
+                </HStack>
+              ) : (
+                ""
+              )}
             </HStack>
-            <Divider />
-            <Text padding={2} textAlign={"center"} fontWeight={"bold"}>
-              {selectedRecipe?.recipe.ingredients ? "RECIPE INGREDIENTS:" : ""}
-            </Text>
-            <div
-              style={{ paddingBottom: 2, paddingLeft: 10, textAlign: "start" }}
-            >
-              {selectedRecipe?.recipe.ingredients && (
-                <Grid
-                  templateColumns="repeat(auto-fit, minmax(250px, 1fr))"
-                  gap={4}
+            {selectedRecipe ? (
+              <>
+                <Divider />
+                <Text padding={2} textAlign={"center"} fontWeight={"bold"}>
+                  {selectedRecipe?.recipe.ingredients
+                    ? "RECIPE INGREDIENTS:"
+                    : ""}
+                </Text>
+                <div
+                  style={{
+                    paddingBottom: 2,
+                    paddingLeft: 10,
+                    textAlign: "start",
+                  }}
                 >
-                  {selectedRecipe.recipe.ingredients.map((m, index) => (
-                    <li key={index}>
-                      <span style={{ fontSize: 18 }}>{m.text}</span> , <br /> -
-                      quantity: {m.quantity} ,
-                      <br />- measure: {m.measure}
-                    </li>
-                  ))}
-                </Grid>
-              )}
-            </div>
-            <Divider />
-            <Text padding={2}>
-              {selectedRecipe?.recipe.mealType && (
-                <>
-                  <i>Meal type</i>: {selectedRecipe.recipe.mealType}
-                </>
-              )}
-            </Text>
-            <Divider />{" "}
-            <Text padding={2}>
-              {selectedRecipe?.recipe.dishType && (
-                <>
-                  <i>Dish type</i>: {selectedRecipe.recipe.dishType}
-                </>
-              )}
-            </Text>
-            <Divider />{" "}
-            <Text padding={2}>
-              {selectedRecipe?.recipe.calories && (
-                <>
-                  <i>Calories</i>: {selectedRecipe.recipe.calories.toFixed(0)}{" "}
-                  kcal.
-                </>
-              )}
-            </Text>
+                  {selectedRecipe?.recipe.ingredients && (
+                    <Grid
+                      templateColumns="repeat(auto-fit, minmax(250px, 1fr))"
+                      gap={4}
+                    >
+                      {selectedRecipe.recipe.ingredients.map((m, index) => (
+                        <li key={index}>
+                          <span style={{ fontSize: 18 }}>{m.text}</span> ,{" "}
+                          <br /> - quantity: {m.quantity} ,
+                          <br />- measure: {m.measure}
+                        </li>
+                      ))}
+                    </Grid>
+                  )}
+                </div>
+                <Divider />
+                <Text padding={2}>
+                  {selectedRecipe?.recipe.mealType && (
+                    <>
+                      <i>Meal type</i>: {selectedRecipe.recipe.mealType}
+                    </>
+                  )}
+                </Text>
+                <Divider />{" "}
+                <Text padding={2}>
+                  {selectedRecipe?.recipe.dishType && (
+                    <>
+                      <i>Dish type</i>: {selectedRecipe.recipe.dishType}
+                    </>
+                  )}
+                </Text>
+                <Divider />{" "}
+                <Text padding={2}>
+                  {selectedRecipe?.recipe.calories && (
+                    <>
+                      <i>Calories</i>:{" "}
+                      {selectedRecipe.recipe.calories.toFixed(0)} kcal.
+                    </>
+                  )}
+                </Text>
+              </>
+            ) : (
+              ""
+            )}
           </Stack>
         </CardBody>
         <Divider />

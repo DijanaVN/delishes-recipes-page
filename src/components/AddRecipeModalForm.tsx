@@ -34,18 +34,17 @@ const recipeSchema = z.object({
       .min(3, { message: "Title needs to be at least 3 characters." }),
     ingredients: ingredientSchema,
     image: z.string(),
+    calories: z.number({ invalid_type_error: "Calories field is required." }),
+    cuisineType: z
+      .string()
+      .min(3, { message: "Cuisine Type needs to be at least 3 characters." }),
+    mealType: z
+      .string()
+      .min(3, { message: "Meal Type needs to be at least 3 characters." }),
+    dishType: z
+      .string()
+      .min(3, { message: "Dish Type needs to be at least 3 characters." }),
   }),
-
-  calories: z.number({ invalid_type_error: "Calories field is required." }),
-  cuisineType: z
-    .string()
-    .min(3, { message: "Cuisine Type needs to be at least 3 characters." }),
-  mealType: z
-    .string()
-    .min(3, { message: "Meal Type needs to be at least 3 characters." }),
-  dishType: z
-    .string()
-    .min(3, { message: "Dish Type needs to be at least 3 characters." }),
 });
 
 type FormData = z.infer<typeof recipeSchema>;
@@ -135,7 +134,7 @@ const AddRecipeModal = () => {
   return (
     <>
       <Button rounded="full" onClick={onOpen}>
-        <BsPencilSquare fontSize="300%" />
+        <BsPencilSquare fontSize="100%" />
         <Text paddingLeft={2}>Add Recipe</Text>
       </Button>
       <Modal
@@ -183,37 +182,37 @@ const AddRecipeModal = () => {
                   <Text color="red">{errors.recipe.label.message}</Text>
                 )}
                 <Input
-                  {...register("cuisineType")}
+                  {...register("recipe.cuisineType")}
                   placeholder="Cuisine type"
                   mb={2}
                 />
-                {errors.cuisineType && (
-                  <Text color="red">{errors.cuisineType.message}</Text>
+                {errors.recipe?.cuisineType && (
+                  <Text color="red">{errors.recipe.cuisineType.message}</Text>
                 )}
                 <Input
-                  {...register("mealType")}
+                  {...register("recipe.mealType")}
                   placeholder="Meal type"
                   mb={2}
                 />
-                {errors.mealType && (
-                  <Text color="red">{errors.mealType.message}</Text>
+                {errors.recipe?.mealType && (
+                  <Text color="red">{errors.recipe.mealType.message}</Text>
                 )}
                 <Input
-                  {...register("dishType")}
+                  {...register("recipe.dishType")}
                   placeholder="Dish type"
                   mb={2}
                 />
-                {errors.dishType && (
-                  <Text color="red">{errors.dishType.message}</Text>
+                {errors.recipe?.dishType && (
+                  <Text color="red">{errors.recipe.dishType.message}</Text>
                 )}
                 <Input
-                  {...register("calories", { valueAsNumber: true })}
+                  {...register("recipe.calories", { valueAsNumber: true })}
                   type="number"
                   placeholder="Calories"
                   mb={2}
                 />{" "}
-                {errors.calories && (
-                  <Text color="red">{errors.calories.message}</Text>
+                {errors.recipe?.calories && (
+                  <Text color="red">{errors.recipe.calories.message}</Text>
                 )}
               </FormControl>
 
