@@ -30,7 +30,14 @@ function App() {
                 templateColumns={"30% 70%"}
                 minHeight={"100vh"} */}
 
-                <GridItem padding={1} area={"nav"} bg="bluecolor">
+                <GridItem
+                  padding={1}
+                  area={"nav"}
+                  bg="bluecolor"
+                  position="sticky"
+                  top={0}
+                  zIndex="sticky"
+                >
                   <NavBar />
                 </GridItem>
                 <GridItem minHeight="100vh" area={"aside"}>

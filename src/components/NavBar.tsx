@@ -39,10 +39,15 @@ const NavBar = () => {
       <Box flex={{ base: 1, md: "2" }}>
         <SearchInput />
       </Box>
-      <Flex justifyContent="flex-end" alignItems="center">
-        <ColorModeSwitch />
+      <Flex
+        justifyContent="flex-end"
+        alignItems="center"
+        paddingLeft={2}
+        fontSize={{ base: "md", sm: "2xl" }}
+      >
         <BookmarkedList />
         <AddRecipeModal />
+        <ColorModeSwitch />
       </Flex>
     </Flex>
   );

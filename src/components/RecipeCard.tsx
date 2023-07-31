@@ -31,7 +31,6 @@ const RecipeCard = () => {
   console.log(bookmarkedRecipes);
   console.log(combinedRecipes);
   console.log(isBookmarked);
-  const noRecipesSelected = !selectedRecipe;
 
   const isRecipeBookmarked =
     selectedRecipe &&
@@ -186,13 +185,13 @@ const RecipeCard = () => {
                     </>
                   )}
                 </Text>
+                <Divider />
               </>
             ) : (
               ""
             )}
           </Stack>
         </CardBody>
-        <Divider />
         {selectedRecipe && !isRecipeInNewRecipes && (
           <CardFooter justifyContent="center" textAlign="center">
             <Flex flexDirection={"column"} align={"center"}>

@@ -9,7 +9,7 @@ const ColorModeSwitch = () => {
         isChecked={colorMode === "dark"}
         onChange={toggleColorMode}
       />
-      <Text fontFamily={"Parisienne-Regular"} fontWeight={"bold"}>
+      <Text fontFamily={"Parisienne-Regular"} fontWeight={"bold"} fontSize={15}>
         {" "}
         {colorMode === "dark" ? "Dark Mode" : "White Mode"}
       </Text>

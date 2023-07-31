@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import useRecipes, { Recipe } from "../hooks/useRecipes";
 import "./../App.css";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import React from "react";
 import { useSearchText } from "./../state-management/searchTextContext";
 import { useSelectedRecipe } from "./../state-management/selectedRecipeContext";
@@ -36,11 +36,6 @@ const RecipesList = () => {
   console.log(combinedRecipes);
   return (
     <Box>
-      {/* {searchQuery.error && (
-        <Text color={colorMode === "dark" ? "#2292c3" : "black"}>
-          {searchQuery.error.message}
-        </Text>
-      )} */}
       {searchQuery.isLoading && (
         <Center minHeight="100vh">
           <Button
