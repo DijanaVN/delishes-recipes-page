@@ -12,27 +12,41 @@ import {
   Input,
   useDisclosure,
   Text,
-  VStack,
+  Flex,
+  Box,
 } from "@chakra-ui/react";
 import { BsPencilSquare } from "react-icons/bs";
 import { MdUpload } from "react-icons/md";
 import ownrecipe from "../../images-logos/yourownrecipeslg.webp";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FieldValues, useForm } from "react-hook-form";
+import { Controller, FieldValues, useForm } from "react-hook-form";
 import { useState } from "react";
 import { useNewRecipes } from "../state-management/newRecipeContext";
 import { Recipe } from "../hooks/useRecipes";
 
-const ingredientSchema = z.array(z.string());
-
+const ingredientSchema = z.object({
+  text: z.string().nonempty({ message: "Ingredient field is required." }),
+  quantity: z
+    .number({ invalid_type_error: "Quantity field is required." })
+    .nullable()
+    .refine(
+      (val) => {
+        if (val === null) return true; // Quantity can be null (empty)
+        const isNumber = !isNaN(val);
+        return isNumber ? val >= 0 : false;
+      },
+      { message: "Quantity must be a number and cannot be negative." }
+    ),
+  measure: z.string().nonempty({ message: "Measure field is required." }),
+});
 const recipeSchema = z.object({
   recipe: z.object({
     uri: z.string(),
     label: z
       .string()
       .min(3, { message: "Title needs to be at least 3 characters." }),
-    ingredients: ingredientSchema,
+    ingredients: z.array(ingredientSchema),
     image: z.string(),
     calories: z.number({ invalid_type_error: "Calories field is required." }),
     cuisineType: z
@@ -50,7 +64,7 @@ const recipeSchema = z.object({
 type FormData = z.infer<typeof recipeSchema>;
 
 const AddRecipeModal = () => {
-  const { setNewRecipes } = useNewRecipes();
+  const { newRecipes, setNewRecipes } = useNewRecipes();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isUploaded, setIsUploaded] = useState(false);
@@ -73,6 +87,7 @@ const AddRecipeModal = () => {
     watch,
     setValue,
     reset,
+    control,
     formState: { errors, isValid },
   } = useForm<FormData>({
     resolver: zodResolver(recipeSchema),
@@ -80,40 +95,33 @@ const AddRecipeModal = () => {
       recipe: {
         uri: generateRandomUniqueUri(),
         image: ownrecipe,
+        ingredients: [{ text: "", quantity: undefined, measure: "" }],
       },
     },
   });
 
   const ingrediantObjectFunction = (data: FieldValues): Recipe => {
-    const ingredientsObject = {
-      text: data.recipe.ingredients[0],
-      quantity: Number(data.recipe.ingredients[1]),
-      measure: data.recipe.ingredients[2],
-    };
+    const ingredientsObject = data.recipe.ingredients.map(
+      (ingredient: z.infer<typeof ingredientSchema>) => ({
+        text: ingredient.text,
+        quantity: ingredient.quantity || null,
+        measure: ingredient.measure,
+      })
+    );
     const updatedData = {
       ...data,
       recipe: {
         ...data.recipe,
-        ingredients: [ingredientsObject],
+        ingredients: ingredientsObject,
       },
     };
     return updatedData;
   };
-
-  const ingredientsValue = watch("recipe.ingredients");
-
-  const handleIngredientInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = e.target.value;
-
-    // Split the input value into an array of strings
-    const ingredientsArray = value
-      .split(",")
-      .map((ingredient) => ingredient.trim());
-
-    // Update the field value with the array
-    setValue("recipe.ingredients", ingredientsArray);
+  const addIngredient = () => {
+    setValue("recipe.ingredients", [
+      ...watch("recipe.ingredients"),
+      { text: "", quantity: null, measure: "" },
+    ]);
   };
 
   const onSubmit = (data: FieldValues) => {
@@ -130,7 +138,7 @@ const AddRecipeModal = () => {
     setIsUploaded(false);
     closeSuccessModal();
   };
-
+  console.log(newRecipes);
   return (
     <>
       <Button rounded="full" onClick={onOpen}>
@@ -218,31 +226,99 @@ const AddRecipeModal = () => {
 
               <FormControl padding={2}>
                 <FormLabel>INGREDIENTS</FormLabel>
-                <VStack>
-                  <label htmlFor="ing">Ingredient 1</label>
-                  <Input
-                    id="ing"
-                    value={ingredientsValue?.join(", ") || ""}
-                    onChange={handleIngredientInputChange}
-                    placeholder="Format ingediant, quantity, measure"
-                  />
-                  {errors.recipe?.ingredients && (
-                    <Text color="red">
-                      {errors.recipe?.ingredients?.message}
-                    </Text>
+                <Box mb={4}>
+                  <Box display="flex" justifyContent="end" alignItems="center">
+                    <Button
+                      onClick={addIngredient}
+                      rounded="full"
+                      colorScheme="green"
+                      size="xs" // Set the size to small for a smaller button
+                    >
+                      Add Ingredient
+                    </Button>
+                  </Box>
+                </Box>
+                <Controller
+                  name="recipe.ingredients"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      {field.value.map((ingredient, index) => (
+                        <Box key={index} mb={6}>
+                          <label>Ingredient {index + 1}</label>
+                          <Box mt={2}>
+                            <Input
+                              {...register(
+                                `recipe.ingredients.${index}.text` as const
+                              )}
+                              defaultValue={ingredient.text}
+                              placeholder="Ingredient"
+                              mb={2}
+                            />
+                            {errors.recipe?.ingredients?.[index]?.text && ( // Access the specific error for this ingredient
+                              <Text color="red">
+                                {
+                                  errors.recipe.ingredients[index]?.text
+                                    ?.message
+                                }
+                              </Text>
+                            )}
+                            <Input
+                              {...register(
+                                `recipe.ingredients.${index}.quantity` as const,
+                                {
+                                  valueAsNumber: true,
+                                }
+                              )}
+                              type="number"
+                              placeholder="Quantity"
+                              mb={2}
+                            />{" "}
+                            {errors.recipe?.ingredients?.[index]?.quantity && ( // Access the specific error for this ingredient
+                              <Text color="red">
+                                {
+                                  errors.recipe.ingredients[index]?.quantity
+                                    ?.message
+                                }
+                              </Text>
+                            )}
+                            <Input
+                              {...register(
+                                `recipe.ingredients.${index}.measure` as const
+                              )}
+                              defaultValue={ingredient.measure}
+                              placeholder="Measure"
+                              mb={2}
+                            />{" "}
+                            {errors.recipe?.ingredients?.[index]?.measure && ( // Access the specific error for this ingredient
+                              <Text color="red">
+                                {
+                                  errors.recipe.ingredients[index]?.measure
+                                    ?.message
+                                }
+                              </Text>
+                            )}
+                          </Box>
+                        </Box>
+                      ))}
+                    </>
                   )}
-                </VStack>
+                />
               </FormControl>
-              <Button
-                disabled={!isValid}
-                type="submit"
-                rounded={"full"}
-                colorScheme="blue"
-                mr={3}
-              >
-                <MdUpload />
-                <Text paddingLeft={2}>Upload</Text>
-              </Button>
+              <Flex justifyContent="center">
+                {" "}
+                {/* Use Flex to center the Upload button */}
+                <Button
+                  disabled={!isValid}
+                  type="submit"
+                  rounded="full"
+                  colorScheme="blue"
+                  mr={3}
+                >
+                  <MdUpload />
+                  <Text paddingLeft={2}>Upload</Text>
+                </Button>
+              </Flex>
             </form>
           </ModalBody>
         </ModalContent>

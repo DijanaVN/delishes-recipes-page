@@ -22,14 +22,10 @@ function App() {
                     : `' nav' 'main' 'aside'`
                 }
                 templateColumns={
-                  window.innerWidth >= 1000 ? " 30% 70%" : "%" // Single column for screens less than 1000px
+                  window.innerWidth >= 1000 ? " 30% 70%" : "100%"
                 }
                 minHeight="100vh"
               >
-                {/* templateAreas={`'nav nav' 'aside main ' 'footer footer'`}
-                templateColumns={"30% 70%"}
-                minHeight={"100vh"} */}
-
                 <GridItem
                   padding={1}
                   area={"nav"}

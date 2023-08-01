@@ -152,9 +152,9 @@ const RecipeCard = () => {
                     >
                       {selectedRecipe.recipe.ingredients.map((m, index) => (
                         <li key={index}>
-                          <span style={{ fontSize: 18 }}>{m.text}</span> ,{" "}
-                          <br /> - quantity: {m.quantity} ,
-                          <br />- measure: {m.measure}
+                          <span style={{ fontSize: 18 }}>{m.text}</span>
+                          <br /> - quantity: {m.quantity}
+                          <br /> - measure: {m.measure}
                         </li>
                       ))}
                     </Grid>
