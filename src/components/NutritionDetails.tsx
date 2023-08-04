@@ -1,27 +1,28 @@
 import {
   Box,
-  List,
-  ListItem,
-  Image,
   Flex,
+  Switch,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
   Tr,
-  Button,
 } from "@chakra-ui/react";
 import { useSelectedRecipe } from "./../state-management/selectedRecipeContext";
 import image from "../../images-logos/brooke-lark-08bOYnH_r_E-unsplash.webp";
-import { useState } from "react";
 import ScrollToTopButton from "./ScroolToTheTopButton";
+import { useState } from "react";
 const NutritionDitails = () => {
   const { selectedRecipe } = useSelectedRecipe();
-  const totalNutrients = selectedRecipe?.recipe.totalNutrients;
+  const [showTotalDaily, setShowTotalDaily] = useState(true);
 
-  if (!totalNutrients) {
-    return null; // Handle case when totalNutrients is not available
+  const totalNutrientsData = showTotalDaily
+    ? selectedRecipe?.recipe.totalDaily
+    : selectedRecipe?.recipe.totalNutrients;
+
+  if (!totalNutrientsData) {
+    return null; // Handle case when totalNutrientsData is not available
   }
 
   const backgroundStyle = {
@@ -35,6 +36,18 @@ const NutritionDitails = () => {
   return (
     <Box style={backgroundStyle} height="100%" width="100%" borderRadius="lg">
       <Flex justifyContent={"flex-end"}>
+        <Box color={"darkgreen"} padding={2} fontWeight={"bold"}>
+          {showTotalDaily ? "Total Daily Nutrient" : "Total Nutrient"}
+        </Box>
+        <Switch
+          padding={2}
+          isChecked={showTotalDaily}
+          onChange={() => setShowTotalDaily((prev) => !prev)}
+          colorScheme={showTotalDaily ? "cyan" : "red"}
+          style={{
+            background: "rgba(200,10, 10, 0.1)",
+          }}
+        />
         <Table
           variant="simple"
           colorScheme="green"
@@ -56,8 +69,8 @@ const NutritionDitails = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {Object.keys(totalNutrients).map((nutrientKey) => {
-              const nutrient = totalNutrients[nutrientKey];
+            {Object.keys(totalNutrientsData).map((nutrientKey) => {
+              const nutrient = totalNutrientsData[nutrientKey];
               const formattedQuantity = nutrient.quantity.toFixed(2);
               return (
                 <Tr key={nutrientKey}>

@@ -9,7 +9,7 @@ import {
   List,
   ListItem,
 } from "@chakra-ui/react";
-import useRecipes, { Recipe } from "../hooks/useRecipes";
+import useRecipes from "../hooks/useRecipes";
 import "./../App.css";
 import { useState } from "react";
 import React from "react";

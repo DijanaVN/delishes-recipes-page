@@ -44,6 +44,7 @@ const RecipeCard = () => {
       }
     }
   };
+  console.log(newRecipes);
 
   const image = () => {
     if (selectedRecipe?.recipe.images?.LARGE?.url) {
@@ -86,7 +87,11 @@ const RecipeCard = () => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Link to={"/details"}>Nutrition details</Link>
+              {selectedRecipe && !isRecipeInNewRecipes ? (
+                <Link to={"/details"}>Nutrition details</Link>
+              ) : (
+                ""
+              )}
               <HStack justifyContent="center" flex="1">
                 <Heading fontWeight="bold" size="lg">
                   {selectedRecipe
