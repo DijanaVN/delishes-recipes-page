@@ -4,6 +4,7 @@ import ColorModeSwitch from "./ColorModeSwitch";
 import SearchInput from "./SearchInput";
 import AddRecipeModal from "./AddRecipeModalForm";
 import BookmarkedList from "./BookmarkedList";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   const { toggleColorMode } = useColorMode();
@@ -17,24 +18,28 @@ const NavBar = () => {
       p={2}
     >
       <HStack spacing={2} alignItems="center">
-        <Image
-          boxSize={{ base: "8", md: "10" }}
-          borderRadius={5}
-          maxH="100%"
-          maxW="100%"
-          src={logo}
-          alt="Recipes image-logo"
-        />
-        <Box
-          as="h1"
-          fontSize={{ base: "md", sm: "2xl" }}
-          fontWeight="bold"
-          fontFamily="Parisienne-Regular"
-          onClick={toggleColorMode}
-          paddingRight={2}
-        >
-          Delicious
-        </Box>
+        <Link to={"/"}>
+          <HStack>
+            <Image
+              boxSize={{ base: "8", md: "10" }}
+              borderRadius={5}
+              maxH="100%"
+              maxW="100%"
+              src={logo}
+              alt="Recipes image-logo"
+            />
+
+            <Box
+              as="h1"
+              fontSize={{ base: "md", sm: "2xl" }}
+              fontWeight="bold"
+              fontFamily="Parisienne-Regular"
+              paddingRight={2}
+            >
+              Delicious
+            </Box>
+          </HStack>
+        </Link>
       </HStack>
       <Box flex={{ base: 1, md: "2" }}>
         <SearchInput />

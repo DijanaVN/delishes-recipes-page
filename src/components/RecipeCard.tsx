@@ -20,6 +20,7 @@ import useRecipes from "../hooks/useRecipes";
 import { useBookmarkedRecipes } from "../state-management/bookmarkedRecipesContext";
 import { useSearchText } from "../state-management/searchTextContext";
 import { useSelectedRecipe } from "../state-management/selectedRecipeContext";
+import { Link } from "react-router-dom";
 
 const RecipeCard = () => {
   const { newRecipes, removeRecipe } = useNewRecipes();
@@ -28,9 +29,6 @@ const RecipeCard = () => {
   const { combinedRecipes } = useRecipes(searchText);
   const { bookmarkedRecipes, addBookmark, removeBookmark, isBookmarked } =
     useBookmarkedRecipes();
-  console.log(bookmarkedRecipes);
-  console.log(combinedRecipes);
-  console.log(isBookmarked);
 
   const isRecipeBookmarked =
     selectedRecipe &&
@@ -87,6 +85,7 @@ const RecipeCard = () => {
               justifyContent="space-between"
               alignItems="center"
             >
+              <Link to={"/details"}>Nutrition details</Link>
               <HStack justifyContent="center" flex="1">
                 <Heading fontWeight="bold" size="lg">
                   {selectedRecipe

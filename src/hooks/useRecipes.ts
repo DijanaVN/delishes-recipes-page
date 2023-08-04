@@ -1,6 +1,14 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import apiClient from "../services/api-client";
 import { useNewRecipes } from "./../state-management/newRecipeContext";
+interface totalNutrientsTotlaDaily {
+  [key: string]: totalNutrientsTotlaDailyDetails;
+}
+interface totalNutrientsTotlaDailyDetails {
+  label: string;
+  quantity: number;
+  unit: string;
+}
 
 export interface Recipe {
   recipe: {
@@ -24,6 +32,8 @@ export interface Recipe {
     mealType: string[];
     dishType: string[];
     searchText: string;
+    totalDaily: totalNutrientsTotlaDaily;
+    totalNutrients: totalNutrientsTotlaDaily;
   };
 }
 export interface FetchRecipesResponse {

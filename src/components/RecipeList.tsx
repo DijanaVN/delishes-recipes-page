@@ -33,7 +33,7 @@ const RecipesList = () => {
   const handleMouseLeave = () => {
     setHoveredRecipe(null);
   };
-  console.log(combinedRecipes);
+  // console.log(combinedRecipes);
   return (
     <Box>
       {searchQuery.isLoading && (
