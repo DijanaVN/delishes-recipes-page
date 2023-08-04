@@ -21,6 +21,7 @@ import { useBookmarkedRecipes } from "../state-management/bookmarkedRecipesConte
 import { useSearchText } from "../state-management/searchTextContext";
 import { useSelectedRecipe } from "../state-management/selectedRecipeContext";
 import { Link } from "react-router-dom";
+import ScrollToTopButton from "./ScroolToTheTopButton";
 
 const RecipeCard = () => {
   const { newRecipes, removeRecipe } = useNewRecipes();
@@ -219,6 +220,7 @@ const RecipeCard = () => {
             </Flex>
           </CardFooter>
         )}
+        <ScrollToTopButton />
       </Card>
     </>
   );

@@ -24,6 +24,7 @@ import { Controller, FieldValues, useForm } from "react-hook-form";
 import { useState } from "react";
 import { useNewRecipes } from "../state-management/newRecipeContext";
 import { Recipe } from "../hooks/useRecipes";
+import ScrollToTopButton from "./ScroolToTheTopButton";
 
 const ingredientSchema = z.object({
   text: z.string().nonempty({ message: "Ingredient field is required." }),
@@ -319,6 +320,7 @@ const AddRecipeModal = () => {
                   <Text paddingLeft={2}>Upload</Text>
                 </Button>
               </Flex>
+              <ScrollToTopButton />
             </form>
           </ModalBody>
         </ModalContent>
