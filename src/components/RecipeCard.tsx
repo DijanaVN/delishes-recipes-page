@@ -124,8 +124,8 @@ const RecipeCard = () => {
                     ) && (
                       <Button
                         variant="outline"
-                        colorScheme="gray" // Change color to your preference
-                        size="sm" // Change size to your preferences
+                        colorScheme="gray"
+                        size="sm"
                         onClick={() =>
                           handleDeleteRecipe(selectedRecipe.recipe.uri)
                         }

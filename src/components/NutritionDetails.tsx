@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   Switch,
   Table,
@@ -23,7 +22,7 @@ const NutritionDitails = () => {
     : selectedRecipe?.recipe.totalNutrients;
 
   if (!totalNutrientsData) {
-    return null; // Handle case when totalNutrientsData is not available
+    return null;
   }
 
   const backgroundStyle = {

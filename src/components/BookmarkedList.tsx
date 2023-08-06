@@ -49,7 +49,7 @@ const BookmarkedList = () => {
           leftIcon={<FaRegBookmark />}
           variant="solid"
           paddingX={2}
-          marginRight={2} // Adjust the margin as needed
+          marginRight={2}
         >
           Bookmarks
         </MenuButton>

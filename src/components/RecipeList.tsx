@@ -33,7 +33,7 @@ const RecipesList = () => {
   const handleMouseLeave = () => {
     setHoveredRecipe(null);
   };
-  // console.log(combinedRecipes);
+
   return (
     <Box>
       {searchQuery.isLoading && (
@@ -112,9 +112,6 @@ const RecipesList = () => {
             ))}
           </React.Fragment>
         ))}
-        {/* {searchQuery.data?.map((recipe: Recipe) => (
-          
-        ))} */}
       </List>{" "}
       <Flex padding={1} justifyContent="flex-end">
         {shouldShowLoadMore && (

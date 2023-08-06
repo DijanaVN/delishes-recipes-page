@@ -1,12 +1,4 @@
-import {
-  Box,
-  Flex,
-  HStack,
-  Image,
-  useColorMode,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Flex, HStack, Image, Text, VStack } from "@chakra-ui/react";
 import logo from "../../images-logos/logozoomed.webp";
 import ColorModeSwitch from "./ColorModeSwitch";
 import SearchInput from "./SearchInput";
@@ -15,8 +7,6 @@ import BookmarkedList from "./BookmarkedList";
 import { Link } from "react-router-dom";
 
 const NavBar = () => {
-  const { toggleColorMode } = useColorMode();
-
   return (
     <Flex
       as="nav"

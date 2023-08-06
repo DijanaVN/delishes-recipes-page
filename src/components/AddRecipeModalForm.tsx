@@ -34,7 +34,7 @@ const ingredientSchema = z.object({
     .regex(/^\d*\.?\d+$/, "Quantity must be a number and cannot be negative.")
     .refine(
       (val) => {
-        if (val === "") return true; // Quantity can be empty
+        if (val === "") return true;
         const isNumber = !isNaN(parseFloat(val));
         return isNumber ? parseFloat(val) >= 0 : false;
       },
@@ -236,7 +236,7 @@ const AddRecipeModal = () => {
                       onClick={addIngredient}
                       rounded="full"
                       colorScheme="green"
-                      size="xs" // Set the size to small for a smaller button
+                      size="xs"
                     >
                       Add Ingredient
                     </Button>
@@ -259,7 +259,7 @@ const AddRecipeModal = () => {
                               placeholder="Ingredient"
                               mb={2}
                             />
-                            {errors.recipe?.ingredients?.[index]?.text && ( // Access the specific error for this ingredient
+                            {errors.recipe?.ingredients?.[index]?.text && (
                               <Text color="red">
                                 {
                                   errors.recipe.ingredients[index]?.text
@@ -282,7 +282,7 @@ const AddRecipeModal = () => {
                               placeholder="Quantity"
                               mb={2}
                             />
-                            {errors.recipe?.ingredients?.[index]?.quantity && ( // Access the specific error for this ingredient
+                            {errors.recipe?.ingredients?.[index]?.quantity && (
                               <Text color="red">
                                 {
                                   errors.recipe.ingredients[index]?.quantity
@@ -298,7 +298,7 @@ const AddRecipeModal = () => {
                               placeholder="Measure"
                               mb={2}
                             />{" "}
-                            {errors.recipe?.ingredients?.[index]?.measure && ( // Access the specific error for this ingredient
+                            {errors.recipe?.ingredients?.[index]?.measure && (
                               <Text color="red">
                                 {
                                   errors.recipe.ingredients[index]?.measure
@@ -314,8 +314,6 @@ const AddRecipeModal = () => {
                 />
               </FormControl>
               <Flex justifyContent="center">
-                {" "}
-                {/* Use Flex to center the Upload button */}
                 <Button
                   disabled={!isValid}
                   type="submit"
