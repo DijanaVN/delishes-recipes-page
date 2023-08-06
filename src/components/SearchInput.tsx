@@ -12,7 +12,7 @@ import { BsSearch } from "react-icons/bs";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSearchText } from "../state-management/searchTextContext";
 
 const schema = z.object({
@@ -34,9 +34,11 @@ const SearchInput = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
+  const navigate = useNavigate();
   const onSubmit = (data: FieldValues) => {
     setSearchText(data.searchText);
     reset();
+    navigate("/");
   };
 
   const { colorMode } = useColorMode();

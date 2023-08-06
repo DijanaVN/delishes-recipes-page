@@ -64,6 +64,7 @@ const RecipeCard = () => {
 
   const handleDeleteRecipe = (recipeUri: string) => {
     removeRecipe(recipeUri);
+    window.location.reload();
   };
 
   return (
@@ -88,7 +89,9 @@ const RecipeCard = () => {
               alignItems="center"
             >
               {selectedRecipe && !isRecipeInNewRecipes ? (
-                <Link to={"/details"}>Nutrition details</Link>
+                <Link to={"/details"} style={{ textDecoration: "underline" }}>
+                  Nutrition details
+                </Link>
               ) : (
                 ""
               )}

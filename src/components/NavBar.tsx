@@ -1,4 +1,12 @@
-import { Box, Flex, HStack, Image, useColorMode } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  HStack,
+  Image,
+  useColorMode,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import logo from "../../images-logos/logozoomed.webp";
 import ColorModeSwitch from "./ColorModeSwitch";
 import SearchInput from "./SearchInput";
@@ -20,15 +28,17 @@ const NavBar = () => {
       <HStack spacing={2} alignItems="center">
         <Link to={"/"}>
           <HStack>
-            <Image
-              boxSize={{ base: "8", md: "10" }}
-              borderRadius={5}
-              maxH="100%"
-              maxW="100%"
-              src={logo}
-              alt="Recipes image-logo"
-            />
-
+            <VStack mr={0} spacing={0}>
+              <Image
+                boxSize={{ base: "8", md: "10" }}
+                borderRadius={5}
+                maxH="100%"
+                maxW="100%"
+                src={logo}
+                alt="Recipes image-logo"
+              />
+              <Text fontSize={12}>Home</Text>
+            </VStack>
             <Box
               as="h1"
               fontSize={{ base: "md", sm: "2xl" }}

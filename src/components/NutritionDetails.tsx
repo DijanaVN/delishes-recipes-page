@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Flex,
   Switch,
   Table,
@@ -47,7 +48,7 @@ const NutritionDitails = () => {
           style={{
             background: "rgba(200,10, 10, 0.1)",
           }}
-        />
+        />{" "}
         <Table
           variant="simple"
           colorScheme="green"

@@ -25,17 +25,18 @@ import { useState } from "react";
 import { useNewRecipes } from "../state-management/newRecipeContext";
 import { Recipe } from "../hooks/useRecipes";
 import ScrollToTopButton from "./ScroolToTheTopButton";
+import { useNavigate } from "react-router-dom";
 
 const ingredientSchema = z.object({
   text: z.string().nonempty({ message: "Ingredient field is required." }),
   quantity: z
-    .number({ invalid_type_error: "Quantity field is required." })
-    .nullable()
+    .string()
+    .regex(/^\d*\.?\d+$/, "Quantity must be a number and cannot be negative.")
     .refine(
       (val) => {
-        if (val === null) return true; // Quantity can be null (empty)
-        const isNumber = !isNaN(val);
-        return isNumber ? val >= 0 : false;
+        if (val === "") return true; // Quantity can be empty
+        const isNumber = !isNaN(parseFloat(val));
+        return isNumber ? parseFloat(val) >= 0 : false;
       },
       { message: "Quantity must be a number and cannot be negative." }
     ),
@@ -100,6 +101,7 @@ const AddRecipeModal = () => {
       },
     },
   });
+  const navigate = useNavigate();
 
   const ingrediantObjectFunction = (data: FieldValues): Recipe => {
     const ingredientsObject = data.recipe.ingredients.map(
@@ -121,7 +123,7 @@ const AddRecipeModal = () => {
   const addIngredient = () => {
     setValue("recipe.ingredients", [
       ...watch("recipe.ingredients"),
-      { text: "", quantity: null, measure: "" },
+      { text: "", quantity: "", measure: "" },
     ]);
   };
 
@@ -132,6 +134,7 @@ const AddRecipeModal = () => {
     setIsUploaded(true);
     openSuccessModal();
     onClose();
+    navigate("/");
     reset();
   };
 
@@ -268,13 +271,17 @@ const AddRecipeModal = () => {
                               {...register(
                                 `recipe.ingredients.${index}.quantity` as const,
                                 {
-                                  valueAsNumber: true,
+                                  pattern: {
+                                    value: /^\d*\.?\d+$/,
+                                    message:
+                                      "Quantity must be a number and cannot be negative.",
+                                  },
                                 }
                               )}
-                              type="number"
+                              type="text"
                               placeholder="Quantity"
                               mb={2}
-                            />{" "}
+                            />
                             {errors.recipe?.ingredients?.[index]?.quantity && ( // Access the specific error for this ingredient
                               <Text color="red">
                                 {

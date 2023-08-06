@@ -1,10 +1,7 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import RecipeCard from "../components/RecipeCard";
 import RecipesList from "../components/RecipeList";
-import { BookmarkedRecipesProvider } from "../state-management/bookmarkedRecipesContext";
-import { NewRecipesProvider } from "../state-management/newRecipeContext";
-import { SearchTextProvider } from "../state-management/searchTextContext";
-import { SelectedRecipeProvider } from "../state-management/selectedRecipeContext";
+
 import { useLocation } from "react-router-dom";
 import useRecipes from "../hooks/useRecipes";
 
@@ -12,6 +9,7 @@ const HomePage = () => {
   const location = useLocation();
   const searchText = new URLSearchParams(location.search).get("q") || "";
   useRecipes(searchText);
+
   return (
     <>
       <Grid
