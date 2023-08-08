@@ -84,13 +84,12 @@ const SearchInput = () => {
             <BsSearch />
           </Button>
         </InputRightElement>
-
-        {errors.searchText && (
-          <Text paddingLeft={2} color={"yellow"}>
-            {errors.searchText.message}
-          </Text>
-        )}
       </InputGroup>
+      {errors.searchText && (
+        <Text paddingLeft={2} color={"yellow"}>
+          {errors.searchText.message}
+        </Text>
+      )}
     </form>
   );
 };

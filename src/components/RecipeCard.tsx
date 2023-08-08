@@ -44,7 +44,6 @@ const RecipeCard = () => {
       }
     }
   };
-  console.log(newRecipes);
 
   const image = () => {
     if (selectedRecipe?.recipe.images?.LARGE?.url) {

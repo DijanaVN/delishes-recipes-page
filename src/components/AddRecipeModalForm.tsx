@@ -142,7 +142,7 @@ const AddRecipeModal = () => {
     setIsUploaded(false);
     closeSuccessModal();
   };
-  console.log(newRecipes);
+
   return (
     <>
       <Button rounded="full" onClick={onOpen}>
