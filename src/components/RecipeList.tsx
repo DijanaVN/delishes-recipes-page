@@ -34,6 +34,10 @@ const RecipesList = () => {
     setHoveredRecipe(null);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <Box>
       {searchQuery.isLoading && (
@@ -64,6 +68,7 @@ const RecipesList = () => {
                     onClick={() => {
                       if (recipe) {
                         setSelectedRecipe(recipe);
+                        scrollToTop();
                       }
                     }}
                     variant={"solid"}
