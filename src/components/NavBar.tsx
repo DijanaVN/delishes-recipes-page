@@ -5,6 +5,7 @@ import SearchInput from "./SearchInput";
 import AddRecipeModal from "./AddRecipeModalForm";
 import BookmarkedList from "./BookmarkedList";
 import { Link } from "react-router-dom";
+import React from "react";
 
 const NavBar = () => {
   return (

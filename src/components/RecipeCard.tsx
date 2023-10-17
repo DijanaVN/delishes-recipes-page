@@ -22,6 +22,7 @@ import { useSearchText } from "../state-management/searchTextContext";
 import { useSelectedRecipe } from "../state-management/selectedRecipeContext";
 import { Link } from "react-router-dom";
 import ScrollToTopButton from "./ScroolToTheTopButton";
+import React from "react";
 
 const RecipeCard = () => {
   const { newRecipes, removeRecipe } = useNewRecipes();

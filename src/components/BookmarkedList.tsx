@@ -14,6 +14,7 @@ import { BsChevronDown } from "react-icons/bs";
 import { FaRegBookmark } from "react-icons/fa";
 import { useBookmarkedRecipes } from "../state-management/bookmarkedRecipesContext";
 import { useSelectedRecipe } from "./../state-management/selectedRecipeContext";
+import React from "react";
 
 const BookmarkedList = () => {
   const { bookmarkedRecipes } = useBookmarkedRecipes();

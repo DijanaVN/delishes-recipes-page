@@ -4,6 +4,7 @@ import Layout from "./Layout";
 import HomePage from "./HomePage";
 import ErrorPage from "./ErrorPage";
 import NutritionDitails from "./../components/NutritionDetails";
+import React from "react";
 
 const router = createBrowserRouter([
   {

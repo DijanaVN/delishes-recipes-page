@@ -13,6 +13,7 @@ import { useSelectedRecipe } from "./../state-management/selectedRecipeContext";
 import image from "../../images-logos/brooke-lark-08bOYnH_r_E-unsplash.webp";
 import ScrollToTopButton from "./ScroolToTheTopButton";
 import { useState } from "react";
+import React from "react";
 const NutritionDitails = () => {
   const { selectedRecipe } = useSelectedRecipe();
   const [showTotalDaily, setShowTotalDaily] = useState(true);

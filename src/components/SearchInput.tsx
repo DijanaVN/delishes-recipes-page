@@ -14,6 +14,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useSearchText } from "../state-management/searchTextContext";
+import React from "react";
 
 const schema = z.object({
   searchText: z

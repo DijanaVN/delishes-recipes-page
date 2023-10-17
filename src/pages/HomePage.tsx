@@ -4,6 +4,7 @@ import RecipesList from "../components/RecipeList";
 
 import { useLocation } from "react-router-dom";
 import useRecipes from "../hooks/useRecipes";
+import React from "react";
 
 const HomePage = () => {
   const location = useLocation();
