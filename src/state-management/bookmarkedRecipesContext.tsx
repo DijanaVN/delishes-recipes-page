@@ -2,7 +2,7 @@ import { ReactNode, createContext, useContext, useState } from "react";
 import { Recipe } from "../hooks/useRecipes";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import React from "react";
-type bookmarkedRecipesContext = {
+type BookmarkedRecipesContext = {
   bookmarkedRecipes: Recipe[];
   addBookmark: (uri: string, combinedRecipes: Recipe[]) => void;
   removeBookmark: (uri: string) => void;
@@ -11,11 +11,11 @@ type bookmarkedRecipesContext = {
   setIsBookmarked: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type bookmarkedProviderProps = {
+type BookmarkedProviderProps = {
   children: ReactNode;
 };
 
-const bookmarkedRecipesContext = createContext<bookmarkedRecipesContext>({
+const bookmarkedRecipesContext = createContext<BookmarkedRecipesContext>({
   bookmarkedRecipes: [],
   addBookmark: () => {},
   removeBookmark: () => {},
@@ -30,7 +30,7 @@ export function useBookmarkedRecipes() {
 
 export function BookmarkedRecipesProvider({
   children,
-}: bookmarkedProviderProps) {
+}: BookmarkedProviderProps) {
   const [bookmarkedRecipes, setBookmarkedRecipes] = useLocalStorage<Recipe[]>(
     "RecipesStorage",
     []

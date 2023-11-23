@@ -1,15 +1,15 @@
 import React, { ReactNode, createContext, useContext, useState } from "react";
 
-type searchTextContext = {
+type SearchTextContext = {
   searchText: string;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
 };
 
-type searchTextProps = {
+type SearchTextProps = {
   children: ReactNode;
 };
 
-const SearchTextContext = createContext<searchTextContext>({
+const SearchTextContext = createContext<SearchTextContext>({
   searchText: "",
   setSearchText: () => {},
 });
@@ -18,7 +18,7 @@ export function useSearchText() {
   return useContext(SearchTextContext);
 }
 
-export function SearchTextProvider({ children }: searchTextProps) {
+export function SearchTextProvider({ children }: SearchTextProps) {
   const [searchText, setSearchText] = useState("");
 
   return (
